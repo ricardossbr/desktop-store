@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Scanner;
 
 public class Store {
-    public static void main(String[] arg){
+    public static void main(String[] arg) {
         showMenu();
     }
 
@@ -19,7 +19,7 @@ public class Store {
     private static void handleMenu() {
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-        switch (input){
+        switch (input) {
             case "1":
                 getProduct();
                 break;
@@ -33,7 +33,7 @@ public class Store {
                 deleteProduct();
                 break;
             default:
-                
+
         }
     }
 
@@ -51,7 +51,7 @@ public class Store {
         System.out.println("DIGITE O VALOR DO PRODUTO");
         try {
             product.value = scanner.nextInt();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.getMessage();
         }
 
@@ -59,7 +59,7 @@ public class Store {
         System.out.println("DIGITE A QUANTIDADE DO PRODUTO");
         try {
             product.quantity = scanner.nextInt();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.getMessage();
         }
 
@@ -69,7 +69,6 @@ public class Store {
         showMenu();
 
     }
-
 
 
     private static void editProduct() {
@@ -89,5 +88,6 @@ public class Store {
         protected int value;
         protected int quantity;
     }
+}
 
 
