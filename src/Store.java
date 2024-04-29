@@ -11,14 +11,6 @@ public class Store {
         Display display = new Display();
         display.showMenu();
     }
-
-
-
-
-
-
-
-
 }
 
 
