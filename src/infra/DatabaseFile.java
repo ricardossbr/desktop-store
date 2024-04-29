@@ -1,6 +1,6 @@
 package src.infra;
 
-import src.Product;
+import src.domain.Product;
 
 import java.io.*;
 import java.nio.file.Files;

@@ -1,4 +1,4 @@
-package src;
+package src.domain;
 
 import src.infra.DatabaseFile;
 

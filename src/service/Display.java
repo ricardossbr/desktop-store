@@ -1,7 +1,6 @@
 package src.service;
 
-import src.Product;
-import src.infra.DatabaseFile;
+import src.domain.Product;
 import src.infra.DatabaseImp;
 
 import java.util.List;

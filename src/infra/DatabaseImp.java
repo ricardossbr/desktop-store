@@ -1,8 +1,7 @@
 package src.infra;
 
-import src.Product;
+import src.domain.Product;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DatabaseImp implements DataBase{
