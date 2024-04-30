@@ -158,7 +158,6 @@ public class Display {
                     column4.set(String.valueOf(r.getValue()).length());
                 }
         });
-
         StringBuilder printColumn = new StringBuilder();
         printColumn.append(getStringPrint(column1.get()));
         printColumn.append(getStringPrint(column2.get()));
@@ -174,8 +173,9 @@ public class Display {
     }
 
     private StringBuilder getStringPrint(int colum) {
+        colum++;
         StringBuilder print = new StringBuilder();
-        for (int i = 0; i < colum; i++){
+        for (int i = 0; i <= colum; i++){
             if(i ==0) print.append("+");
             print.append("-");
         }
@@ -183,8 +183,11 @@ public class Display {
     }
 
     private String printField(String field, int columnSize) {
-        StringBuilder result = new StringBuilder(field);
-        for (int i = result.length(); i < columnSize; i++) {
+        columnSize++;
+        StringBuilder result = new StringBuilder();
+        result.append(" ");
+        result.append(field);
+        for (int i = result.length(); i <= columnSize; i++) {
             result.append(" ");
         }
         return result.toString();
