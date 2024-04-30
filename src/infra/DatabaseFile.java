@@ -71,7 +71,7 @@ public class DatabaseFile {
                 }
             }
             reader.close();
-            return nextId;
+            return nextId == 0 ? 1 : nextId;
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
