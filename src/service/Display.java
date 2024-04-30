@@ -146,36 +146,24 @@ public class Display {
         AtomicInteger column3 = new AtomicInteger();
         AtomicInteger column4 = new AtomicInteger();
         products.stream().forEach( r -> {
-                if(column1.get() == 0){
+                if(String.valueOf(r.getId()).length() > column1.get()){
                     column1.set(String.valueOf(r.getId()).length());
-                }else if(String.valueOf(r.getId()).length() > column1.get()){
-                    column1.set(String.valueOf(r.getId()).length());
-                }
-                if(column2.get() == 0){
-                    column2.set(r.getName().length());
-                }else if(r.getName().length() > column2.get()){
+                }if(r.getName().length() > column2.get()){
                     column2.set(r.getName().length());
                 }
-                if(column3.get() == 0){
-                    column3.set(String.valueOf(r.getValue()).length());
-                }else if(String.valueOf(r.getValue()).length() > column3.get()){
+                if(String.valueOf(r.getValue()).length() > column3.get()){
                     column3.set(String.valueOf(r.getValue()).length());
                 }
-                if(column4.get() == 0){
-                    column4.set(String.valueOf(r.getValue()).length());
-                }else if(String.valueOf(r.getValue()).length() > column4.get()){
+                if(String.valueOf(r.getValue()).length() > column4.get()){
                     column4.set(String.valueOf(r.getValue()).length());
                 }
         });
-        StringBuilder printColumn1 = getStringPrint(column1.get());
-        StringBuilder printColumn2 = getStringPrint(column2.get());
-        StringBuilder printColumn3 = getStringPrint(column3.get());
-        StringBuilder printColumn4 = getStringPrint(column4.get());
+
         StringBuilder printColumn = new StringBuilder();
-        printColumn.append(printColumn1);
-        printColumn.append(printColumn2);
-        printColumn.append(printColumn3);
-        printColumn.append(printColumn4);
+        printColumn.append(getStringPrint(column1.get()));
+        printColumn.append(getStringPrint(column2.get()));
+        printColumn.append(getStringPrint(column3.get()));
+        printColumn.append(getStringPrint(column4.get()));
         printColumn.append("+");
 
         products.stream().forEach(r -> {
