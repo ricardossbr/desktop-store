@@ -2,10 +2,8 @@ package src.service;
 
 import src.domain.Product;
 import src.infra.DatabaseImp;
-
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Display {
 
@@ -13,7 +11,6 @@ public class Display {
     private final DatabaseImp databaseImp = new DatabaseImp();
 
     private void handleMenu() {
-        Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         switch (input) {
             case "1":
@@ -37,7 +34,6 @@ public class Display {
             default:
                 showMenu();
                 break;
-
         }
     }
 
@@ -51,14 +47,55 @@ public class Display {
 
     private void getProduct() {
         System.out.println("----GET PRODUCT-----");
-        List<Product> products = databaseImp.getProducts();
-        //products.stream().forEach(Product::print);
+        final List<Product> products = databaseImp.getProducts();
         printList(products);
 
     }
 
     private void salveProduct() {
+        final String name = getName();
+        final int value = getInt("DIGITE O VALOR DO PRODUTO");
+        final int quantity = getInt("DIGITE A QUANTIDADE DO PRODUTO");
+        final Product product = new Product(name, value, quantity);
+        databaseImp.saveProduct(product);
+        System.out.println("PRODUTO SALVO!");
+        showMenu();
 
+    }
+
+    private void editProduct() {
+        System.out.println("----EDIT PRODUCT-----");
+        final int id = getInt("----DIGITE O ID DO PRODUTO!-----");
+        final Product productFound = databaseImp.getById(id);
+        if(productFound != null) {
+            final String name = getName();
+            final int value = getInt("DIGITE O VALOR DO PRODUTO");
+            final int quantity = getInt("DIGITE A QUANTIDADE DO PRODUTO");
+            productFound.prepareToEdit(name, value, quantity);
+            databaseImp.editProduct(productFound);
+            System.out.println("Produto editado com sucesso!");
+        }
+        System.out.println("id do produto não foi encontrado!");
+    }
+
+    private void deleteProduct() {
+        System.out.println("----DELETE PRODUCT-----");
+        final int id = scanner.nextInt();
+        databaseImp.deleteProduct(id);
+    }
+
+    private int getInt(String message) {
+        System.out.println(message);
+        int value = 0;
+        try {
+            value = this.scanner.nextInt();
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        return value;
+    }
+
+    private String getName() {
         System.out.println("DIGITE O NOME DO PRODUTO");
         String name = null;
         while (true){
@@ -69,105 +106,25 @@ public class Display {
                 break;
             }
         }
-
-        System.out.println("DIGITE O VALOR DO PRODUTO");
-        int value = 0;
-        try {
-             value = this.scanner.nextInt();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        System.out.println("DIGITE A QUANTIDADE DO PRODUTO");
-        int quantity = 0;
-        try {
-            quantity = this.scanner.nextInt();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        Product product = new Product(name, value, quantity);
-        databaseImp.saveProduct(product);
-
-        System.out.println("PRODUTO SALVO!");
-        showMenu();
-
-    }
-
-
-    private void editProduct() {
-        System.out.println("----EDIT PRODUCT-----");
-        System.out.println("----DIGITE O ID DO PRODUTO!-----");
-        int id = scanner.nextInt();
-        Product productFound = databaseImp.getById(id);
-        if(productFound != null) {
-            System.out.println("DIGITE O NOME DO PRODUTO");
-            String name = null;
-            while (true){
-                name = this.scanner.nextLine();
-                if(name == null || name.isEmpty()){
-                    name = this.scanner.nextLine();
-                }else{
-                    break;
-                }
-            }
-
-            System.out.println("DIGITE O VALOR DO PRODUTO");
-            int value = 0;
-            try {
-                value = this.scanner.nextInt();
-            } catch (Exception e) {
-                e.getMessage();
-            }
-
-            System.out.println("DIGITE A QUANTIDADE DO PRODUTO");
-            int quantity = 0;
-            try {
-                quantity = this.scanner.nextInt();
-            } catch (Exception e) {
-                e.getMessage();
-            }
-            productFound.prepareToEdit(name, value, quantity);
-            databaseImp.editProduct(productFound);
-            System.out.println("Produto editado com sucesso!");
-        }
-        System.out.println("id do produto não foi encontrado!");
-    }
-
-    private void deleteProduct() {
-        System.out.println("----DELETE PRODUCT-----");
-        int id = scanner.nextInt();
-        databaseImp.deleteProduct(id);
+        return name;
     }
 
     private void printList(List<Product> products) {
-        AtomicInteger column1 = new AtomicInteger();
-        AtomicInteger column2 = new AtomicInteger();
-        AtomicInteger column3 = new AtomicInteger();
-        AtomicInteger column4 = new AtomicInteger();
-        products.stream().forEach( r -> {
-                if(String.valueOf(r.getId()).length() > column1.get()){
-                    column1.set(String.valueOf(r.getId()).length());
-                }if(r.getName().length() > column2.get()){
-                    column2.set(r.getName().length());
-                }
-                if(String.valueOf(r.getValue()).length() > column3.get()){
-                    column3.set(String.valueOf(r.getValue()).length());
-                }
-                if(String.valueOf(r.getValue()).length() > column4.get()){
-                    column4.set(String.valueOf(r.getValue()).length());
-                }
-        });
-        StringBuilder printColumn = new StringBuilder();
-        printColumn.append(getStringPrint(column1.get()));
-        printColumn.append(getStringPrint(column2.get()));
-        printColumn.append(getStringPrint(column3.get()));
-        printColumn.append(getStringPrint(column4.get()));
+        final int column1 = products.stream().map(r -> String.valueOf(r.getId()).length()).max(Integer::compareTo).get();
+        final int column2 = products.stream().map(r -> r.getName().length()).max(Integer::compareTo).get();
+        final int column3 = products.stream().map(r -> String.valueOf(r.getValue()).length()).max(Integer::compareTo).get();
+        final int column4 = products.stream().map(r -> String.valueOf(r.getQuantity()).length()).max(Integer::compareTo).get();
+
+        final StringBuilder printColumn = new StringBuilder();
+        printColumn.append(getStringPrint(column1));
+        printColumn.append(getStringPrint(column2));
+        printColumn.append(getStringPrint(column3));
+        printColumn.append(getStringPrint(column4));
         printColumn.append("+");
 
-        products.stream().forEach(r -> {
+        products.forEach(r -> {
             System.out.println(printColumn);
-            System.out.println("|" + printField(String.valueOf(r.getId()), column1.get() )+ "|" + printField(r.getName(), column2.get() ) + "|" + printField(String.valueOf(r.getValue()), column3.get() ) + "|" + printField(String.valueOf(r.getQuantity()), column4.get()) + "|");
+            System.out.println("|" + printField(String.valueOf(r.getId()), column1 )+ "|" + printField(r.getName(), column2 ) + "|" + printField(String.valueOf(r.getValue()), column3 ) + "|" + printField(String.valueOf(r.getQuantity()), column4) + "|");
             System.out.println(printColumn);
         });
     }
