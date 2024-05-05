@@ -8,4 +8,7 @@ import java.util.List;
 public interface StockRepository {
 
     void makeSale(Stock stock);
+
+    int getNextId();
+
 }

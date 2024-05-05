@@ -16,5 +16,5 @@ public interface ProductRepository {
 
     void deleteProduct(int id);
 
-
+    int getNextId();
 }

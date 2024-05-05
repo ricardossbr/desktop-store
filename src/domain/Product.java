@@ -1,6 +1,8 @@
 package src.domain;
 
 import src.infra.files.ProductDatabaseFile;
+import src.infra.repository.ProductRepository;
+import src.infra.repository.impl.ProductRepositoryImp;
 
 import java.math.BigDecimal;
 
@@ -11,8 +13,8 @@ public class Product {
         protected int quantity;
 
         public Product(){
-                ProductDatabaseFile file = new ProductDatabaseFile();
-                this.id = file.getNextId();
+                ProductRepository repository = new ProductRepositoryImp();
+                this.id = repository.getNextId();
         }
         public Product(String id, String name, String value, String quantity){
                 this.id = Integer.parseInt(id);
@@ -42,6 +44,10 @@ public class Product {
         public int getValue(){return this.value.intValue();}
 
         public int getQuantity(){return this.quantity;}
+
+        public int updateQuantity(int quantity){
+                return this.quantity - quantity;
+        }
 
 
         @Override

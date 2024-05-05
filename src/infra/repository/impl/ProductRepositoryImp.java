@@ -33,4 +33,9 @@ public class ProductRepositoryImp implements ProductRepository {
     public void deleteProduct(int id) {
         file.deleteLineById(id);
     }
+
+    @Override
+    public int getNextId() {
+        return file.getNextId();
+    }
 }
