@@ -1,11 +1,13 @@
-package src.infra;
+package src.infra.repository.impl;
 
 import src.domain.Product;
+import src.infra.files.ProductDatabaseFile;
+import src.infra.repository.ProductRepository;
 
 import java.util.List;
 
-public class DatabaseImp implements DataBase{
-    private final DatabaseFile file = new DatabaseFile();
+public class ProductRepositoryImp implements ProductRepository {
+    private final ProductDatabaseFile file = new ProductDatabaseFile();
 
     @Override
     public List<Product> getProducts() {

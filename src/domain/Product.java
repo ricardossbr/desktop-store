@@ -1,6 +1,6 @@
 package src.domain;
 
-import src.infra.DatabaseFile;
+import src.infra.files.ProductDatabaseFile;
 
 import java.math.BigDecimal;
 
@@ -11,7 +11,7 @@ public class Product {
         protected int quantity;
 
         public Product(){
-                DatabaseFile file = new DatabaseFile();
+                ProductDatabaseFile file = new ProductDatabaseFile();
                 this.id = file.getNextId();
         }
         public Product(String id, String name, String value, String quantity){
@@ -22,7 +22,7 @@ public class Product {
         }
 
         public Product(String name, int value, int quantity){
-                DatabaseFile file = new DatabaseFile();
+                ProductDatabaseFile file = new ProductDatabaseFile();
                 this.id = file.getNextId();
                 this.name = name;
                 this.value = new BigDecimal(value);

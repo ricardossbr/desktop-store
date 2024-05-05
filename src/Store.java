@@ -1,6 +1,6 @@
 package src;
 
-import src.service.Display;
+import src.viewers.Display;
 
 public class Store {
     public static void main(String[] arg) {

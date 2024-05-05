@@ -1,14 +1,16 @@
-package src.service;
+package src.viewers;
 
 import src.domain.Product;
-import src.infra.DatabaseImp;
+import src.service.ProductService;
+import src.service.impl.ProductServiceImpl;
+
 import java.util.List;
 import java.util.Scanner;
 
 public class Display {
 
     private final Scanner scanner = new Scanner(System.in);
-    private final DatabaseImp databaseImp = new DatabaseImp();
+    private final ProductService productService = new ProductServiceImpl();
 
     private void handleMenu() {
         String input = scanner.nextLine();
@@ -18,15 +20,23 @@ public class Display {
                 showMenu();
                 break;
             case "2":
-                salveProduct();
+                productService.salveProduct();
                 showMenu();
                 break;
             case "3":
-                editProduct();
+                productService.editProduct();
                 showMenu();
                 break;
             case "4":
-                deleteProduct();
+                productService.deleteProduct();
+                showMenu();
+                break;
+            case "5":
+                productService.deleteProduct();
+                showMenu();
+                break;
+            case "6":
+                productService.deleteProduct();
                 showMenu();
                 break;
             case "exit":
@@ -42,72 +52,17 @@ public class Display {
         System.out.println("2 - Cadastrar novo produto");
         System.out.println("3 - Editar produto");
         System.out.println("4 - Excluir produto");
+        System.out.println("5 - Carinho de compras");
+        System.out.println("6 - Vender");
         handleMenu();
     }
 
     private void getProduct() {
         System.out.println("----GET PRODUCT-----");
-        final List<Product> products = databaseImp.getProducts();
-        printList(products);
-
+        List<Product> product = productService.getProduct();
+        printList(product);
     }
 
-    private void salveProduct() {
-        final String name = getName();
-        final int value = getInt("DIGITE O VALOR DO PRODUTO");
-        final int quantity = getInt("DIGITE A QUANTIDADE DO PRODUTO");
-        final Product product = new Product(name, value, quantity);
-        databaseImp.saveProduct(product);
-        System.out.println("PRODUTO SALVO!");
-        showMenu();
-
-    }
-
-    private void editProduct() {
-        System.out.println("----EDIT PRODUCT-----");
-        final int id = getInt("----DIGITE O ID DO PRODUTO!-----");
-        final Product productFound = databaseImp.getById(id);
-        if(productFound != null) {
-            final String name = getName();
-            final int value = getInt("DIGITE O VALOR DO PRODUTO");
-            final int quantity = getInt("DIGITE A QUANTIDADE DO PRODUTO");
-            productFound.prepareToEdit(name, value, quantity);
-            databaseImp.editProduct(productFound);
-            System.out.println("Produto editado com sucesso!");
-        }
-        System.out.println("id do produto não foi encontrado!");
-    }
-
-    private void deleteProduct() {
-        System.out.println("----DELETE PRODUCT-----");
-        final int id = scanner.nextInt();
-        databaseImp.deleteProduct(id);
-    }
-
-    private int getInt(String message) {
-        System.out.println(message);
-        int value = 0;
-        try {
-            value = this.scanner.nextInt();
-        } catch (Exception e) {
-            e.getMessage();
-        }
-        return value;
-    }
-
-    private String getName() {
-        System.out.println("DIGITE O NOME DO PRODUTO");
-        String name = null;
-        while (true){
-            name = this.scanner.nextLine();
-            if(name == null || name.isEmpty()){
-                name = this.scanner.nextLine();
-            }else{
-                break;
-            }
-        }
-        return name;
-    }
 
     private void printList(List<Product> products) {
         final int column1 = products.stream().map(r -> String.valueOf(r.getId()).length()).max(Integer::compareTo).get();

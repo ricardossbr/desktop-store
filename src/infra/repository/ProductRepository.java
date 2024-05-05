@@ -1,10 +1,10 @@
-package src.infra;
+package src.infra.repository;
 
 import src.domain.Product;
 
 import java.util.List;
 
-public interface DataBase {
+public interface ProductRepository {
 
     List<Product> getProducts();
 

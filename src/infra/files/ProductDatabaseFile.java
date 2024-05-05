@@ -1,4 +1,4 @@
-package src.infra;
+package src.infra.files;
 
 import src.domain.Product;
 
@@ -10,13 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DatabaseFile {
+public class ProductDatabaseFile {
 
     private final File myObj;
-    private final static String FILE_NAME = "database.txt";
-
+    private final static String FILE_NAME = "product_database.txt";
     private final static int fields = new Product().getClass().getDeclaredFields().length;
-    public  DatabaseFile() {
+
+    public ProductDatabaseFile() {
         this.myObj = new File(FILE_NAME);
         try {
             if (myObj.createNewFile()) {
