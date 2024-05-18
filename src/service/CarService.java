@@ -1,15 +1,21 @@
 package src.service;
 
 import src.domain.Car;
-import src.domain.Product;
+import java.util.List;
 
 public interface CarService {
 
-    Car getCar(int id);
+    List<Car> getCars();
 
-    void AddProduct(Product product);
+    Car getCar();
 
-    void removeProduct(Product product);
+    void createCar();
 
-    void finishCar(int id);
+    void addProduct();
+
+    void removeProduct();
+
+    void finishCar();
+
+    void finishAndMakeSale();
 }

@@ -1,45 +1,46 @@
 package src.viewers;
 
 import src.domain.Product;
-import src.service.ProductService;
-import src.service.impl.ProductServiceImpl;
+import src.service.CarService;
+import src.service.impl.CarServiceImpl;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class Display {
+public class SubMenu {
 
     private final Scanner scanner = new Scanner(System.in);
-    private final ProductService productService = new ProductServiceImpl();
+    private final CarService service = new CarServiceImpl();
+
 
     private void handleMenu() {
         String input = scanner.nextLine();
         switch (input) {
             case "1":
-                getProduct();
+                service.getCars();
                 showMenu();
                 break;
             case "2":
-                productService.salveProduct();
+                service.createCar();
                 showMenu();
                 break;
             case "3":
-                productService.editProduct();
+                service.addProduct();
                 showMenu();
                 break;
             case "4":
-                productService.deleteProduct();
+                service.removeProduct();
                 showMenu();
                 break;
             case "5":
-                productService.deleteProduct();
+                service.finishCar();
                 showMenu();
                 break;
             case "6":
-                productService.deleteProduct();
+                service.finishAndMakeSale();
                 showMenu();
                 break;
-            case "exit":
+            case "7":
                 break;
             default:
                 showMenu();
@@ -48,23 +49,22 @@ public class Display {
     }
 
     public void showMenu() {
-        System.out.println("1 - Listar produtos");
-        System.out.println("2 - Cadastrar novo produto");
-        System.out.println("3 - Editar produto");
+        System.out.println("1 - Listar os carrinhos");
+        System.out.println("2 - Criar carrinho");
+        System.out.println("3 - Adicionar carrinho");
         System.out.println("4 - Excluir produto");
-        System.out.println("5 - Carinho de compras");
-        System.out.println("6 - Vender");
+        System.out.println("5 - Finalizar carrinho");
+        System.out.println("6 - Finalizar carrinho e efetuar comprar");
+        System.out.println("7 - Sair");
         handleMenu();
-    }
-
-    private void getProduct() {
-        System.out.println("----GET PRODUCT-----");
-        List<Product> product = productService.getProduct();
-        printList(product);
     }
 
 
     private void printList(List<Product> products) {
+        if(products == null || products.isEmpty()) {
+            System.out.println("----Não tem nenhum produto cadastrado ainda!-----");
+            return;
+        }
         final int column1 = products.stream().map(r -> String.valueOf(r.getId()).length()).max(Integer::compareTo).get();
         final int column2 = products.stream().map(r -> r.getName().length()).max(Integer::compareTo).get();
         final int column3 = products.stream().map(r -> String.valueOf(r.getValue()).length()).max(Integer::compareTo).get();

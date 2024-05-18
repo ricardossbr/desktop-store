@@ -5,6 +5,7 @@ import src.infra.repository.impl.ProductRepositoryImp;
 import src.service.ProductService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class ProductServiceImpl implements ProductService {
@@ -12,7 +13,12 @@ public class ProductServiceImpl implements ProductService {
     private final Scanner scanner = new Scanner(System.in);
 
     @Override
-    public List<Product> getProduct() {
+    public Optional<Product> getProduct(int id) {
+        return Optional.ofNullable(databaseImp.getById(id));
+    }
+
+    @Override
+    public List<Product> getProducts() {
         final List<Product> products = databaseImp.getProducts();
         return products;
     }
@@ -38,9 +44,21 @@ public class ProductServiceImpl implements ProductService {
             productFound.prepareToEdit(name, value, quantity);
             databaseImp.editProduct(productFound);
             System.out.println("Produto editado com sucesso!");
+        }else{
+            System.out.println("id do produto não foi encontrado!");
         }
-        System.out.println("id do produto não foi encontrado!");
 
+    }
+
+    @Override
+    public void editProduct(Product product) {
+        final Product productFound = databaseImp.getById(product.getId());
+        if(productFound != null) {
+            productFound.prepareToEdit(product.getName(), product.getValue(), product.getQuantity());
+            databaseImp.editProduct(productFound);
+        }else{
+            System.out.println("id do produto não foi encontrado!");
+        }
     }
 
     @Override

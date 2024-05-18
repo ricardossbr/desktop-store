@@ -14,7 +14,7 @@ public class ProductDatabaseFile {
 
     private final File myObj;
     private final static String FILE_NAME = "product_database.txt";
-    private final static int fields = new Product().getClass().getDeclaredFields().length;
+    private final static String SEPARATOR = ",";
 
     public ProductDatabaseFile() {
         this.myObj = new File(FILE_NAME);
@@ -41,17 +41,16 @@ public class ProductDatabaseFile {
     public List<Product> readFile(){
         final List<Product> products = new ArrayList<>();
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
+            final BufferedReader reader = openFile();
             String element = "";
             while ((element=reader.readLine()) != null){
                 if(!element.trim().isEmpty()){
-                    String line[] = new String[fields];
-                    line = element.split(",");
+                    String[] line = element.split(",");
                     final Product product = new Product(line[0], line[1], line[2], line[3]);
                     products.add(product);
                 }
             }
-            reader.close();
+            closeFile(reader);
             return products;
         } catch (IOException e) {
             System.out.println("An error occurred.");
@@ -62,7 +61,7 @@ public class ProductDatabaseFile {
 
     public int getNextId(){
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
+            final BufferedReader reader = openFile();
             String element = "";
             int nextId  = 0;
             while ((element=reader.readLine()) != null){
@@ -70,8 +69,8 @@ public class ProductDatabaseFile {
                     nextId++;
                 }
             }
-            reader.close();
-            return nextId == 0 ? 1 : nextId;
+            closeFile(reader);
+            return nextId;
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -81,20 +80,16 @@ public class ProductDatabaseFile {
 
     public Product getLineById(int id){
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
-            String element = "";
-            int nextId  = 0;
-            while ((element=reader.readLine()) != null){
-                if(!element.trim().isEmpty()){
-                    String line[] = new String[fields];
-                    line = element.split(",");
-                    if(id == Integer.parseInt(line[0])){
-                        reader.close();
-                        return new Product(line[0], line[1], line[2], line[3]);
-                    }
-                }
-            }
-            reader.close();
+            Product product = Files.lines(myObj.toPath())
+                    .filter(line -> {
+                        String[] split = line.split(SEPARATOR);
+                        return split[0].equals(String.valueOf(id));
+                    })
+                    .map(line -> {
+                        String[] split = line.split(SEPARATOR);
+                        return new Product(split[0], split[1], split[2], split[3]);
+                    }).collect(Collectors.toList()).stream().findFirst().get();
+            return product;
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -104,24 +99,15 @@ public class ProductDatabaseFile {
 
     public void deleteLineById(int id){
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
-            String element = "";
-            int nextId  = 0;
-            while ((element = reader.readLine()) != null){
-                if(!element.trim().isEmpty()){
-                    String line[] = new String[fields];
-                    line = element.split(",");
-                    if(id == Integer.parseInt(line[0])){
-                        String finalElement = element;
-                        List<String> out = Files.lines(myObj.toPath())
-                                .filter(currentLine -> !currentLine.contains(finalElement))
-                                .collect(Collectors.toList());
-                        Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
-                    }
-
-                }
-            }
-            reader.close();
+            final BufferedReader reader = openFile();
+            List<String> out = Files.lines(myObj.toPath())
+                    .filter(line -> {
+                        String[] split = line.split(SEPARATOR);
+                        return !split[0].equals(String.valueOf(id));
+                    })
+                    .collect(Collectors.toList());
+            Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+            closeFile(reader);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -130,36 +116,34 @@ public class ProductDatabaseFile {
 
     public void editLineById(Product product){
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
-            String element = "";
-            while ((element = reader.readLine()) != null){
-                if(!element.trim().isEmpty()){
-                    String line[] = new String[fields];
-                    line = element.split(",");
-                    if(product.getId() == Integer.parseInt(line[0])){
-                        String finalElement = element;
-                        List<String> out = Files.lines(myObj.toPath())
-                                .filter(currentLine -> currentLine.contains(finalElement))
-                                .map(r -> {
-                                    String[] split = r.split(",");
-                                    split[0] = String.valueOf(product.getId() + ",");
-                                    split[1] = product.getName() + ",";
-                                    split[2] = String.valueOf(product.getValue()) + ",";
-                                    split[3] = String.valueOf(product.getQuantity());
-                                    return Arrays.stream(split).flatMap(String::lines).collect(Collectors.joining());
-                                })
-                                .collect(Collectors.toList());
-                        Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
-                    }
-
-                }
-            }
-            reader.close();
+            final BufferedReader reader = this.openFile();
+            List<String> out = Files.lines(myObj.toPath())
+                    .map(line -> {
+                        String[] split = line.split(SEPARATOR);
+                        if(split[0].equals(String.valueOf(product.getId()))){
+                            split[0] = product.getId() + SEPARATOR;
+                            split[1] = product.getName() + SEPARATOR;
+                            split[2] = product.getValue() + SEPARATOR;
+                            split[3] = String.valueOf(product.getQuantity());
+                            return Arrays.stream(split).reduce((a,b)->a+b).orElse("");
+                        }
+                        return line;
+                    })
+                    .collect(Collectors.toList());
+            Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+            this.closeFile(reader);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
     }
 
+    private void closeFile(BufferedReader reader) throws IOException {
+        reader.close();
+    }
+
+    private BufferedReader openFile() throws FileNotFoundException {
+        return new BufferedReader(new FileReader(FILE_NAME));
+    }
 
 }

@@ -22,6 +22,36 @@ public class Stock {
         this.status = status;
     }
 
+    public Stock(String stockId, String product_id, String quantity, String status){
+        this.id = Integer.parseInt(stockId);
+        this.product_id = Integer.parseInt(product_id);
+        this.quantity = Integer.parseInt(quantity);
+        this.status = Status.valueOf(status);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getProduct_id() {
+        return product_id;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public String getStatus() {
+        return status.name();
+    }
+
+    public void makeCarStatus(){
+        this.status = Status.CAR;
+    }
+
+    public void makeSoldStatus(){
+        this.status = Status.SOLD;
+    }
 
     @Override
     public String toString() {

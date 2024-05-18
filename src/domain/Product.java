@@ -45,10 +45,13 @@ public class Product {
 
         public int getQuantity(){return this.quantity;}
 
-        public int updateQuantity(int quantity){
-                return this.quantity - quantity;
+        public void debitQuantity(int quantity){
+            this.quantity =- quantity;
         }
 
+        public void creditQuantity(int quantity){
+                this.quantity =+ quantity;
+        }
 
         @Override
         public String toString() {
