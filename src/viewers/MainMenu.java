@@ -56,7 +56,7 @@ public class MainMenu {
         System.out.println("2 - Cadastrar novo produto");
         System.out.println("3 - Editar produto");
         System.out.println("4 - Excluir produto");
-        System.out.println("5 - Carinho de compras");
+        System.out.println("5 - *Carinho de compras* (Not yet implemented)");
         System.out.println("6 - Vender");
         handleMenu();
     }

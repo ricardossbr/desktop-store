@@ -3,6 +3,7 @@ package src.domain;
 import src.infra.repository.CarRepository;
 import src.infra.repository.impl.CarRepositoryImp;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ public class Car {
     private Set<Product> products;
     private Set<Integer> stockIds;
 
+
     public Car(){
         final CarRepository carRepository = new CarRepositoryImp();
         this.id = carRepository.getNextId();
@@ -20,12 +22,12 @@ public class Car {
         this.stockIds = new HashSet<>();
     }
 
-    public int getId() {
-        return id;
+    public void setId(String id){
+        this.id = Integer.parseInt(id);
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public int getId() {
+        return id;
     }
 
     public void addProduct(Product product) {
@@ -36,16 +38,12 @@ public class Car {
         this.products = this.products.stream().filter(r -> r.getId() != product.getId()).collect(Collectors.toSet());
     }
 
-    public int quantityTotal(){
-        return this.products.stream().map(Product::getQuantity).reduce(Integer::sum).orElse(0);
-    }
-
     public void identifyStock(int stockId){
         this.stockIds.add(stockId);
     }
 
     public Set<Integer> getIdentifyStock(){
-        return this.stockIds;
+        return Collections.unmodifiableSet(this.stockIds);
     }
 
     public int getStockId(int stockId){
@@ -60,7 +58,6 @@ public class Car {
             print.append("\t").append(r.toString()).append('\n');
 
         });
-
         return print.toString();
     }
 }

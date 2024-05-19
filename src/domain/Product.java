@@ -46,11 +46,11 @@ public class Product {
         public int getQuantity(){return this.quantity;}
 
         public void debitQuantity(int quantity){
-            this.quantity =- quantity;
+            this.quantity -= quantity;
         }
 
         public void creditQuantity(int quantity){
-                this.quantity =+ quantity;
+                this.quantity += quantity;
         }
 
         @Override

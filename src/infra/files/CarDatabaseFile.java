@@ -40,19 +40,25 @@ public class CarDatabaseFile {
     }
 
     public List<Car> readFile(){
-        final List<Product> products = new ArrayList<>();
+        final List<Car> cars = new ArrayList<>();
         try {
             final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
             String element = "";
             while ((element=reader.readLine()) != null){
                 if(!element.trim().isEmpty()){
+                    final Car car = new Car();
                     String[] line = element.split(",");
-                    final Product product = new Product(line[0], line[1], line[2], line[3]);
-                    products.add(product);
+                    if(line.length == 1 ){
+                        car.setId(line[0]);
+                    } else if (line.length == 4) {
+                        final Product product = new Product(line[0].replaceAll("[^0-9]", ""), line[1], line[2], line[3]);
+                        car.addProduct(product);
+                    }
+                    cars.add(car);
                 }
             }
             reader.close();
-            return Arrays.asList();
+            return cars;
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -82,15 +88,18 @@ public class CarDatabaseFile {
     public Car getLineById(int id){
         try {
             Car car = Files.lines(myObj.toPath())
-                    .filter(line -> {
-                        String[] split = line.split(SEPARATOR);
-                        return split[0].equals(String.valueOf(id));
-                    })
+                    .map(line -> line.split(SEPARATOR))
+                    .filter(line -> Integer.parseInt(line[0]) == id)
                     .map(line -> {
-                        String[] split = line.split(SEPARATOR);
-                        //return new Car(split[0], split[1], split[2], split[3]);
-                        return new Car();
-                    }).collect(Collectors.toList()).stream().findFirst().orElseGet(null);
+                        final Car newCar = new Car();
+                        if (line.length == 1) {
+                            newCar.setId(line[0]);
+                        } else if (line.length == 4) {
+                            final Product product = new Product(line[0].replaceAll("[^0-9]", ""), line[1], line[2], line[3]);
+                            newCar.addProduct(product);
+                        }
+                        return newCar;
+                    }).toList().stream().findFirst().orElseGet(null);
             return car;
         } catch (IOException e) {
             System.out.println("An error occurred.");
