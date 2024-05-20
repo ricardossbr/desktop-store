@@ -54,10 +54,8 @@ public class Car {
     public String toString() {
         final StringBuilder print = new StringBuilder();
         print.append(id).append(",").append('\n');
-        this.products.forEach(r -> {
-            print.append("\t").append(r.toString()).append('\n');
-
-        });
+        this.products.forEach(r -> print.append("\t").append(r.toString()).append('\n'));
+        this.stockIds.forEach(r -> print.append("\t").append(r).append("\n"));
         return print.toString();
     }
 }

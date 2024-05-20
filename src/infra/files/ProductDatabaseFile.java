@@ -8,6 +8,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ProductDatabaseFile {
@@ -78,9 +79,9 @@ public class ProductDatabaseFile {
         return 1;
     }
 
-    public Product getLineById(int id){
+    public Optional<Product> getLineById(int id){
         try {
-            Product product = Files.lines(myObj.toPath())
+            return Files.lines(myObj.toPath())
                     .filter(line -> {
                         String[] split = line.split(SEPARATOR);
                         return split[0].equals(String.valueOf(id));
@@ -88,8 +89,8 @@ public class ProductDatabaseFile {
                     .map(line -> {
                         String[] split = line.split(SEPARATOR);
                         return new Product(split[0], split[1], split[2], split[3]);
-                    }).collect(Collectors.toList()).stream().findFirst().get();
-            return product;
+                    }).toList().stream().findFirst();
+
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

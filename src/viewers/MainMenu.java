@@ -52,11 +52,11 @@ public class MainMenu {
     }
 
     public void showMenu() {
-        System.out.println("1 - Listar produtos");
+        System.out.println(ConsoleColors.CYAN + "1 - Listar produtos");
         System.out.println("2 - Cadastrar novo produto");
         System.out.println("3 - Editar produto");
         System.out.println("4 - Excluir produto");
-        System.err.println("5 - *Carinho de compras* (Not yet implemented)");
+        System.out.println("5 - *Carinho de compras* (Not yet implemented)");
         System.out.println("6 - Vender");
         handleMenu();
     }
@@ -70,7 +70,7 @@ public class MainMenu {
 
     private void printList(List<Product> products) {
         if(products == null || products.isEmpty()) {
-            System.out.println("----Não tem nenhum produto cadastrado ainda!-----");
+            System.out.println(ConsoleColors.RED_BOLD +  "----Não tem nenhum produto cadastrado ainda!-----");
             return;
         }
         final int column1 = products.stream().map(r -> String.valueOf(r.getId()).length()).max(Integer::compareTo).get();
@@ -86,9 +86,9 @@ public class MainMenu {
         printColumn.append("+");
 
         products.forEach(r -> {
-            System.out.println(printColumn);
-            System.out.println("|" + printField(String.valueOf(r.getId()), column1 )+ "|" + printField(r.getName(), column2 ) + "|" + printField(String.valueOf(r.getValue()), column3 ) + "|" + printField(String.valueOf(r.getQuantity()), column4) + "|");
-            System.out.println(printColumn);
+            System.out.println(ConsoleColors.PURPLE_BOLD + printColumn);
+            System.out.println(ConsoleColors.PURPLE_BOLD + "|" + printField(String.valueOf(r.getId()), column1 )+ "|" + printField(r.getName(), column2 ) + "|" + printField(String.valueOf(r.getValue()), column3 ) + "|" + printField(String.valueOf(r.getQuantity()), column4) + "|");
+            System.out.println(ConsoleColors.PURPLE_BOLD  + printColumn);
         });
     }
 

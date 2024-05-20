@@ -5,6 +5,7 @@ import src.infra.files.ProductDatabaseFile;
 import src.infra.repository.ProductRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ProductRepositoryImp implements ProductRepository {
     private final ProductDatabaseFile file = new ProductDatabaseFile();
@@ -15,7 +16,7 @@ public class ProductRepositoryImp implements ProductRepository {
     }
 
     @Override
-    public Product getById(int id) {
+    public Optional<Product> getById(int id) {
         return file.getLineById(id);
     }
 

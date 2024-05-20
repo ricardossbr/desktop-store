@@ -14,7 +14,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Optional<Product> getProduct(int id) {
-        return Optional.ofNullable(databaseImp.getById(id));
+        return databaseImp.getById(id);
     }
 
     @Override
@@ -36,13 +36,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void editProduct() {
         final int id = getInt("----DIGITE O ID DO PRODUTO!-----");
-        final Product productFound = databaseImp.getById(id);
-        if(productFound != null) {
+        final Optional<Product> productFound = databaseImp.getById(id);
+        if(productFound.isPresent()) {
+            final Product product = productFound.get();
             final String name = getName();
             final int value = getInt("DIGITE O VALOR DO PRODUTO");
             final int quantity = getInt("DIGITE A QUANTIDADE DO PRODUTO");
-            productFound.prepareToEdit(name, value, quantity);
-            databaseImp.editProduct(productFound);
+            product.prepareToEdit(name, value, quantity);
+            databaseImp.editProduct(product);
             System.out.println("Produto editado com sucesso!");
         }else{
             System.out.println("id do produto não foi encontrado!");
@@ -52,10 +53,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void editProduct(Product product) {
-        final Product productFound = databaseImp.getById(product.getId());
-        if(productFound != null) {
-            productFound.prepareToEdit(product.getName(), product.getValue(), product.getQuantity());
-            databaseImp.editProduct(productFound);
+        final Optional<Product> productFound = databaseImp.getById(product.getId());
+        if(productFound.isPresent()) {
+            final Product newProduct = productFound.get();
+            newProduct.prepareToEdit(product.getName(), product.getValue(), product.getQuantity());
+            databaseImp.editProduct(newProduct);
         }else{
             System.out.println("id do produto não foi encontrado!");
         }
