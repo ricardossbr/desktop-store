@@ -36,16 +36,21 @@ public class StockServiceImpl implements StockService {
     public void makeSale() {
         final int id = getInt("----DIGITE O ID DO PRODUTO!-----");
         Optional<Product> product = productService.getProduct(id);
-        Product foundProduct = product.get();
-        final int quantity = getInt("----DIGITE A QUANTIDADE DE PRODUTOS PARA ESSA COMPRA-----");
-        Stock stock = new Stock(foundProduct.getId(), quantity, Status.SOLD);
-        if(quantity > foundProduct.getQuantity()){
-            System.err.println("Produto sem estoque para essa quantidade!");
-            return;
+        if (product.isPresent()) {
+            Product foundProduct = product.get();
+            final int quantity = getInt("----DIGITE A QUANTIDADE DE PRODUTOS PARA ESSA COMPRA-----");
+            Stock stock = new Stock(foundProduct.getId(), quantity, Status.SOLD);
+            if(quantity > foundProduct.getQuantity()){
+                System.err.println("Produto sem estoque para essa quantidade!");
+                return;
+            }
+            repository.makeSale(stock);
+            foundProduct.debitQuantity(quantity);
+            productService.editProduct(foundProduct);
+        }else {
+            System.err.println("Produto não encontrado!");
         }
-        repository.makeSale(stock);
-        foundProduct.debitQuantity(quantity);
-        productService.editProduct(foundProduct);
+
     }
 
     @Override
