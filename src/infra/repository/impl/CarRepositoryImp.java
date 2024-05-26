@@ -5,6 +5,7 @@ import src.infra.files.CarDatabaseFile;
 import src.infra.repository.CarRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CarRepositoryImp implements CarRepository {
     private final CarDatabaseFile file = new CarDatabaseFile();
@@ -16,7 +17,7 @@ public class CarRepositoryImp implements CarRepository {
     }
 
     @Override
-    public Car getById(int id) {
+    public Optional<Car> getById(int id) {
         return file.getLineById(id);
     }
 

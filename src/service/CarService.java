@@ -2,12 +2,13 @@ package src.service;
 
 import src.domain.Car;
 import java.util.List;
+import java.util.Optional;
 
 public interface CarService {
 
     List<Car> getCars();
 
-    Car getCar();
+    Optional<Car> getCar();
 
     void createCar();
 

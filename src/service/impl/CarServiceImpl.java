@@ -10,6 +10,7 @@ import src.service.ProductService;
 import src.service.StockService;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -26,7 +27,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car getCar() {
+    public Optional<Car> getCar() {
         final int value = getInt("DIGITE O ID DO CARRINHO");
         return carRepository.getById(value);
     }
@@ -34,8 +35,9 @@ public class CarServiceImpl implements CarService {
     @Override
     public void createCar() {
         Car car = new Car();
-        Product product = getProduct();
-        if(product==null) return;
+        Optional<Product> productFound = getProduct();
+        if(productFound.isEmpty()) return;
+        Product product = productFound.get();
         final int quantity = getInt("DIGITE O QUANTIDADE DO PRODUTO");
         car.addProduct(product);
         product.debitQuantity(quantity);
@@ -47,9 +49,11 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addProduct() {
-        Car car = getCarFromFile();
-        Product product = getProduct();
-        if(car == null || product==null) return;
+        Optional<Car> carFound = getCarFromFile();
+        Optional<Product> productFound = getProduct();
+        if(carFound.isEmpty() || productFound.isEmpty()) return;
+        Car car = carFound.get();
+        Product product = productFound.get();
         final int quantity = getInt("DIGITE O QUANTIDADE DO PRODUTO");
         product.debitQuantity(quantity);
         car.addProduct(product);
@@ -62,54 +66,58 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeProduct() {
-        Car carFound = getCarFromFile();
-        Product product = getProduct();
-        List<Stock> stocks = stockService.getStocks(carFound.getIdentifyStock());
-        if(carFound == null || product==null) return;
-        carFound.removeProduct(product);
+        Optional<Car> carFound = getCarFromFile();
+        Optional<Product> productFound = getProduct();
+        if(carFound.isEmpty() || productFound.isEmpty()) return;
+        Car car = carFound.get();
+        Product product = productFound.get();
+        List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
+        car.removeProduct(product);
         stocks.stream().filter(stock -> stock.getProduct_id() == product.getId()).forEach(stock -> {
            product.creditQuantity(stock.getQuantity());
         });
         int asInt = stocks.stream().filter(stock -> stock.getProduct_id() == product.getId()).mapToInt(Stock::getId).findFirst().getAsInt();
         productService.editProduct(product);
-        stockService.removeStock(carFound.getStockId(asInt));
-        carRepository.update(carFound);
+        stockService.removeStock(car.getStockId(asInt));
+        carRepository.update(car);
     }
 
     @Override
     public void finishCar() {
-        Car car = getCarFromFile();
-        if(car == null) return;
-        car.getIdentifyStock().forEach(stockService::removeStock);
-        this.carRepository.delete(car.getId());
+        Optional<Car> car = getCarFromFile();
+        Objects.requireNonNull(car).ifPresent(value -> {
+
+            value.getIdentifyStock().forEach(stockService::removeStock);
+            this.carRepository.delete(value.getId());
+        });
     }
 
     @Override
     public void finishAndMakeSale() {
-        Car car = getCarFromFile();
-        if(car == null) return;
+        Optional<Car> car = getCarFromFile();
+        if(car.isEmpty()) return;
         stockService.makeSale();
         
     }
 
-    private Car getCarFromFile() {
+    private Optional<Car> getCarFromFile() {
         final int value = getInt("DIGITE O ID DO CARRINHO");
-        Car carFound = carRepository.getById(value);
-        if(carFound == null) {
+        Optional<Car> carFound = carRepository.getById(value);
+        if(carFound.isEmpty()) {
             System.out.println("Carrinho náo encontrado!");
-            return null;
+            return Optional.empty();
         }
         return carFound;
     }
 
-    private Product getProduct() {
+    private Optional<Product> getProduct() {
         final int value = getInt("DIGITE O ID DO PRODUTO");
         Optional<Product> productFound = productService.getProduct(value);
         if(productFound.isEmpty()) {
             System.out.println("Produto náo encontrado!");
-            return null;
+            return Optional.empty();
         }
-        return productFound.get();
+        return productFound;
     }
 
     private int getInt(String message) {

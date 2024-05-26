@@ -9,6 +9,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CarDatabaseFile {
@@ -85,9 +86,9 @@ public class CarDatabaseFile {
         return 1;
     }
 
-    public Car getLineById(int id){
+    public Optional<Car> getLineById(int id){
         try {
-            Car car = Files.lines(myObj.toPath())
+            return Files.lines(myObj.toPath())
                     .map(line -> line.split(SEPARATOR))
                     .filter(line -> Integer.parseInt(line[0]) == id)
                     .map(line -> {
@@ -99,8 +100,7 @@ public class CarDatabaseFile {
                             newCar.addProduct(product);
                         }
                         return newCar;
-                    }).toList().stream().findFirst().orElseGet(null);
-            return car;
+                    }).toList().stream().findFirst();
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

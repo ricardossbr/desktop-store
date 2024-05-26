@@ -3,12 +3,13 @@ package src.infra.repository;
 import src.domain.Car;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CarRepository {
 
     List<Car> getCar();
 
-    Car getById(int id);
+    Optional<Car> getById(int id);
 
     void save(Car car);
 
