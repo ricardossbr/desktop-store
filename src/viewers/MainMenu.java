@@ -9,6 +9,8 @@ import src.service.impl.StockServiceImpl;
 import java.util.List;
 import java.util.Scanner;
 
+import static src.viewers.ConsoleColors.*;
+
 public class MainMenu {
 
     private final Scanner scanner = new Scanner(System.in);
@@ -16,8 +18,17 @@ public class MainMenu {
     private final StockService stockService = new StockServiceImpl();
     final SubMenu subMenu = new SubMenu();
 
-    private void handleMenu() {
+    private void handleMenu(boolean withOutProduct) {
         String input = scanner.nextLine();
+        if(withOutProduct) {
+            if(input.equals("2")) {
+                productService.salveProduct();
+                showMenu();
+                return;
+            }else if(input.equals("exit")) {
+                return;
+            }
+        }
         switch (input) {
             case "1":
                 getProduct();
@@ -52,25 +63,36 @@ public class MainMenu {
     }
 
     public void showMenu() {
-        System.out.println(ConsoleColors.CYAN + "1 - Listar produtos");
-        System.out.println("2 - Cadastrar novo produto");
-        System.out.println("3 - Editar produto");
-        System.out.println("4 - Excluir produto");
-        System.out.println("5 - *Carinho de compras* (Not yet implemented)");
-        System.out.println("6 - Vender");
-        handleMenu();
+        List<Product> products = productService.getProducts();
+        boolean withOutProduct = false;
+        if(products.isEmpty()) {
+            disableMenu("Listar produtos");
+            printMenu("2 - Cadastrar novo produto");
+            disableMenu("Editar produto");
+            disableMenu("Excluir produto");
+            disableMenu("Carinho de compras");
+            disableMenu("Vender");
+        }else{
+            printMenu( "1 - Listar produtos");
+            printMenu("2 - Cadastrar novo produto");
+            printMenu("3 - Editar produto");
+            printMenu("4 - Excluir produto");
+            printMenu("5 - Carinho de compras");
+            printMenu("6 - Vender");
+            withOutProduct = true;
+        }
+        handleMenu(withOutProduct);
     }
 
     private void getProduct() {
         List<Product> product = productService.getProducts();
-
         printList(product);
     }
 
 
     private void printList(List<Product> products) {
         if(products == null || products.isEmpty()) {
-            System.out.println(ConsoleColors.RED_BOLD +  "----Não tem nenhum produto cadastrado ainda!-----");
+            printError("----Não tem nenhum produto cadastrado ainda!-----");
             return;
         }
         final int column1 = products.stream().map(r -> String.valueOf(r.getId()).length()).max(Integer::compareTo).get();
@@ -86,9 +108,9 @@ public class MainMenu {
         printColumn.append("+");
 
         products.forEach(r -> {
-            System.out.println(ConsoleColors.PURPLE_BOLD + printColumn);
-            System.out.println(ConsoleColors.PURPLE_BOLD + "|" + printField(String.valueOf(r.getId()), column1 )+ "|" + printField(r.getName(), column2 ) + "|" + printField(String.valueOf(r.getValue()), column3 ) + "|" + printField(String.valueOf(r.getQuantity()), column4) + "|");
-            System.out.println(ConsoleColors.PURPLE_BOLD  + printColumn);
+            printMessage(printColumn.toString());
+            printMessage( "|" + printField(String.valueOf(r.getId()), column1 )+ "|" + printField(r.getName(), column2 ) + "|" + printField(String.valueOf(r.getValue()), column3 ) + "|" + printField(String.valueOf(r.getQuantity()), column4) + "|");
+            printMessage(printColumn.toString());
         });
     }
 

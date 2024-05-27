@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static src.viewers.ConsoleColors.printError;
+
 public class CarDatabaseFile {
 
     private final File myObj;
@@ -35,33 +37,34 @@ public class CarDatabaseFile {
             myWriter.append(string).append("\n");
             myWriter.close();
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            printError("An error occurred. when try to write file");
             e.printStackTrace();
         }
     }
 
-    public List<Car> readFile(){
-        final List<Car> cars = new ArrayList<>();
+    public Optional<Car> readFile(){
         try {
+            final Car car = new Car();
             final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
-            String element = "";
-            while ((element=reader.readLine()) != null){
-                if(!element.trim().isEmpty()){
-                    final Car car = new Car();
-                    String[] line = element.split(",");
-                    if(line.length == 1 ){
-                        car.setId(line[0]);
-                    } else if (line.length == 4) {
-                        final Product product = new Product(line[0].replaceAll("[^0-9]", ""), line[1], line[2], line[3]);
-                        car.addProduct(product);
-                    }
-                    cars.add(car);
-                }
-            }
+            Files.lines(myObj.toPath())
+                    .map(line -> line.split(SEPARATOR))
+                    .forEach(line -> {
+                        if(line.length == 1 ){
+                            if(line[0].contains("\t")){
+                                line[0] = line[0].replaceAll("[^0-9]", "");
+                                car.identifyStock(Integer.parseInt(line[0]));
+                            }else{
+                                car.setId(line[0]);
+                            }
+                        } else if (line.length == 4) {
+                            final Product product = new Product(line[0].replaceAll("[^0-9]", ""), line[1], line[2], line[3]);
+                            car.addProduct(product);
+                        }
+                    });
             reader.close();
-            return cars;
+            return Optional.of(car);
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            printError("An error occurred. when try to read file");
             e.printStackTrace();
         }
         return null;
@@ -80,49 +83,10 @@ public class CarDatabaseFile {
             reader.close();
             return nextId;
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            printError("An error occurred. when try to get a new id on file");
             e.printStackTrace();
         }
         return 1;
-    }
-
-    public Optional<Car> getLineById(int id){
-        try {
-            return Files.lines(myObj.toPath())
-                    .map(line -> line.split(SEPARATOR))
-                    .filter(line -> Integer.parseInt(line[0]) == id)
-                    .map(line -> {
-                        final Car newCar = new Car();
-                        if (line.length == 1) {
-                            newCar.setId(line[0]);
-                        } else if (line.length == 4) {
-                            final Product product = new Product(line[0].replaceAll("[^0-9]", ""), line[1], line[2], line[3]);
-                            newCar.addProduct(product);
-                        }
-                        return newCar;
-                    }).toList().stream().findFirst();
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void deleteLineById(int id){
-        try {
-            final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
-            List<String> out = Files.lines(myObj.toPath())
-                    .filter(line -> {
-                        String[] split = line.split(SEPARATOR);
-                        return !split[0].equals(String.valueOf(id));
-                    })
-                    .collect(Collectors.toList());
-            Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
-            reader.close();
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
     }
 
     public void editLineById(Car car){
@@ -144,7 +108,7 @@ public class CarDatabaseFile {
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
             reader.close();
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            printError("An error occurred. when try to edit one line on file");
             e.printStackTrace();
         }
     }

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import static src.viewers.ConsoleColors.*;
+
 public class ProductServiceImpl implements ProductService {
     private final ProductRepositoryImp databaseImp = new ProductRepositoryImp();
     private final Scanner scanner = new Scanner(System.in);
@@ -44,9 +46,9 @@ public class ProductServiceImpl implements ProductService {
             final int quantity = getInt("DIGITE A QUANTIDADE DO PRODUTO");
             product.prepareToEdit(name, value, quantity);
             databaseImp.editProduct(product);
-            System.out.println("Produto editado com sucesso!");
+            printMessage("Produto editado com sucesso!");
         }else{
-            System.out.println("id do produto não foi encontrado!");
+            printError("id do produto não foi encontrado!");
         }
 
     }
@@ -59,19 +61,19 @@ public class ProductServiceImpl implements ProductService {
             newProduct.prepareToEdit(product.getName(), product.getValue(), product.getQuantity());
             databaseImp.editProduct(newProduct);
         }else{
-            System.out.println("id do produto não foi encontrado!");
+            printError("id do produto não foi encontrado!");
         }
     }
 
     @Override
     public void deleteProduct() {
-        System.out.println("----DELETE PRODUCT-----");
+        printInfo("----DELETE PRODUCT-----");
         final int id = scanner.nextInt();
         databaseImp.deleteProduct(id);
     }
 
     private int getInt(String message) {
-        System.out.println(message);
+        printInfo(message);
         int value = 0;
         try {
             value = this.scanner.nextInt();
@@ -82,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private String getName() {
-        System.out.println("DIGITE O NOME DO PRODUTO");
+        printInfo("DIGITE O NOME DO PRODUTO");
         String name = null;
         while (true){
             name = this.scanner.nextLine();

@@ -46,11 +46,15 @@ public class Product {
         public int getQuantity(){return this.quantity;}
 
         public void debitQuantity(int quantity){
-            this.quantity -= quantity;
+            if(quantity <= this.quantity){
+                this.quantity -= quantity;
+            }
         }
 
         public void creditQuantity(int quantity){
-                this.quantity += quantity;
+                if(quantity > 0){
+                  this.quantity += quantity;
+                }
         }
 
         @Override

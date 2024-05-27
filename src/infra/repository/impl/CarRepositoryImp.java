@@ -4,21 +4,14 @@ import src.domain.Car;
 import src.infra.files.CarDatabaseFile;
 import src.infra.repository.CarRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public class CarRepositoryImp implements CarRepository {
     private final CarDatabaseFile file = new CarDatabaseFile();
 
-
     @Override
-    public List<Car> getCar() {
+    public Optional<Car> getCar() {
         return file.readFile();
-    }
-
-    @Override
-    public Optional<Car> getById(int id) {
-        return file.getLineById(id);
     }
 
     @Override

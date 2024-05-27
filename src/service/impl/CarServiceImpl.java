@@ -10,7 +10,6 @@ import src.service.ProductService;
 import src.service.StockService;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -21,22 +20,14 @@ public class CarServiceImpl implements CarService {
     private final ProductService productService = new ProductServiceImpl();
     private final StockService stockService = new StockServiceImpl();
 
-    @Override
-    public List<Car> getCars() {
-        return carRepository.getCar();
-    }
-
-    @Override
-    public Optional<Car> getCar() {
-        final int value = getInt("DIGITE O ID DO CARRINHO");
-        return carRepository.getById(value);
-    }
 
     @Override
     public void createCar() {
+        carRepository.getCar();
+
         Car car = new Car();
         Optional<Product> productFound = getProduct();
-        if(productFound.isEmpty()) return;
+        if(productFound.isEmpty()) createCar();
         Product product = productFound.get();
         final int quantity = getInt("DIGITE O QUANTIDADE DO PRODUTO");
         car.addProduct(product);
@@ -49,10 +40,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addProduct() {
-        Optional<Car> carFound = getCarFromFile();
+        Car car = new Car();
         Optional<Product> productFound = getProduct();
-        if(carFound.isEmpty() || productFound.isEmpty()) return;
-        Car car = carFound.get();
+        if(productFound.isEmpty()) return;
         Product product = productFound.get();
         final int quantity = getInt("DIGITE O QUANTIDADE DO PRODUTO");
         product.debitQuantity(quantity);
@@ -66,10 +56,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeProduct() {
-        Optional<Car> carFound = getCarFromFile();
+        Car car = new Car();
         Optional<Product> productFound = getProduct();
-        if(carFound.isEmpty() || productFound.isEmpty()) return;
-        Car car = carFound.get();
+        if(productFound.isEmpty()) return;
         Product product = productFound.get();
         List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
         car.removeProduct(product);
@@ -84,31 +73,17 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void finishCar() {
-        Optional<Car> car = getCarFromFile();
-        Objects.requireNonNull(car).ifPresent(value -> {
 
-            value.getIdentifyStock().forEach(stockService::removeStock);
-            this.carRepository.delete(value.getId());
-        });
     }
 
     @Override
     public void finishAndMakeSale() {
-        Optional<Car> car = getCarFromFile();
-        if(car.isEmpty()) return;
+
+
         stockService.makeSale();
         
     }
 
-    private Optional<Car> getCarFromFile() {
-        final int value = getInt("DIGITE O ID DO CARRINHO");
-        Optional<Car> carFound = carRepository.getById(value);
-        if(carFound.isEmpty()) {
-            System.out.println("Carrinho náo encontrado!");
-            return Optional.empty();
-        }
-        return carFound;
-    }
 
     private Optional<Product> getProduct() {
         final int value = getInt("DIGITE O ID DO PRODUTO");
