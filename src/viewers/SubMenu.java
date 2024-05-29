@@ -43,12 +43,15 @@ public class SubMenu {
     }
 
     public void showMenu() {
-        service.createCar();
-        printSubMenu("1 - Adicionar produto ao carrinho");
-        printSubMenu("2 - Excluir produto");
-        printSubMenu("3 - Finalizar carrinho");
-        printSubMenu("4 - Finalizar carrinho e efetuar comprar");
-        printSubMenu("5 - Sair");
+        if(service.checkAlreadyCar()){
+            printSubMenu("1 - Adicionar produto ao carrinho");
+            printSubMenu("2 - Excluir produto");
+            printSubMenu("3 - Finalizar carrinho");
+            printSubMenu("4 - Finalizar carrinho e efetuar comprar");
+            printSubMenu("5 - Sair");
+        }else{
+            service.createCar();
+        }
         handleMenu();
     }
 

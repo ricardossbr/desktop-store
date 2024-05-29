@@ -16,10 +16,15 @@ public class Car {
 
 
     public Car(){
-        final CarRepository carRepository = new CarRepositoryImp();
-        this.id = carRepository.getNextId();
+        this.id = 1;
         this.products = new HashSet<>();
         this.stockIds = new HashSet<>();
+    }
+
+    public Car(int id, Set<Product> products, Set<Integer> stockIds){
+        this.id = id;
+        this.products = products;
+        this.stockIds = stockIds;
     }
 
     public void setId(String id){
@@ -36,6 +41,10 @@ public class Car {
 
     public void removeProduct(Product product) {
         this.products = this.products.stream().filter(r -> r.getId() != product.getId()).collect(Collectors.toSet());
+    }
+
+    public void removeStock(int stockId) {
+        this.stockIds = this.stockIds.stream().filter(r -> r.equals(stockId)).collect(Collectors.toSet());
     }
 
     public void identifyStock(int stockId){

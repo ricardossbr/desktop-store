@@ -6,6 +6,8 @@ import src.infra.repository.impl.ProductRepositoryImp;
 
 import java.math.BigDecimal;
 
+import static src.viewers.ConsoleColors.printError;
+
 public class Product {
         private final int id;
         protected String name;
@@ -45,15 +47,21 @@ public class Product {
 
         public int getQuantity(){return this.quantity;}
 
-        public void debitQuantity(int quantity){
-            if(quantity <= this.quantity){
+        public boolean debitQuantity(int quantity){
+            if(this.quantity >= quantity){
                 this.quantity -= quantity;
+                return true;
+            }else {
+                printError("Saldo insuficiente!");
+                return false;
             }
         }
 
         public void creditQuantity(int quantity){
                 if(quantity > 0){
                   this.quantity += quantity;
+                }else{
+                   printError("Valor não pode ser negativo!");
                 }
         }
 

@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import static src.viewers.ConsoleColors.printError;
+import static src.viewers.ConsoleColors.printMessage;
+
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository = new CarRepositoryImp();
@@ -22,53 +25,70 @@ public class CarServiceImpl implements CarService {
 
 
     @Override
-    public void createCar() {
-        carRepository.getCar();
+    public boolean checkAlreadyCar() {
+        Optional<Car> currentCar = carRepository.getCar();
+        return currentCar.isPresent();
+    }
 
-        Car car = new Car();
+    @Override
+    public void createCar() {
+        Car car = getCar();
         Optional<Product> productFound = getProduct();
-        if(productFound.isEmpty()) createCar();
-        Product product = productFound.get();
-        final int quantity = getInt("DIGITE O QUANTIDADE DO PRODUTO");
-        car.addProduct(product);
-        product.debitQuantity(quantity);
-        productService.editProduct(product);
-        int stockId = stockService.makeLikelySale(product, quantity);
-        car.identifyStock(stockId);
-        carRepository.save(car);
+        if(productFound.isPresent()){
+            Product product = productFound.get();
+            final int quantity = getInt("DIGITE O QUANTIDADE DO PRODUTO");
+            boolean debitIsOk = product.debitQuantity(quantity);
+            if(debitIsOk){
+                productService.editProduct(product);
+                car.addProduct(product);
+                int stockId = stockService.makeLikelySale(product, quantity);
+                car.identifyStock(stockId);
+                carRepository.save(car);
+            }else {
+                createCar();
+            }
+        }else{
+            createCar();
+        }
+
     }
 
     @Override
     public void addProduct() {
-        Car car = new Car();
+        Car car = getCar();
         Optional<Product> productFound = getProduct();
-        if(productFound.isEmpty()) return;
-        Product product = productFound.get();
-        final int quantity = getInt("DIGITE O QUANTIDADE DO PRODUTO");
-        product.debitQuantity(quantity);
-        car.addProduct(product);
-        productService.editProduct(product);
-        stockService.makeLikelySale(product, quantity);
-        carRepository.save(car);
+        if(productFound.isPresent()){
+            Product product = productFound.get();
+            final int quantity = getInt("DIGITE O QUANTIDADE DO PRODUTO");
+            boolean debitIsOk = product.debitQuantity(quantity);
+            if(debitIsOk){
+                car.addProduct(product);
+                productService.editProduct(product);
+                stockService.makeLikelySale(product, quantity);
+                carRepository.save(car);
+            }
+        }
     }
 
 
 
     @Override
     public void removeProduct() {
-        Car car = new Car();
+        Car car = getCar();
         Optional<Product> productFound = getProduct();
-        if(productFound.isEmpty()) return;
-        Product product = productFound.get();
-        List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
-        car.removeProduct(product);
-        stocks.stream().filter(stock -> stock.getProduct_id() == product.getId()).forEach(stock -> {
-           product.creditQuantity(stock.getQuantity());
-        });
-        int asInt = stocks.stream().filter(stock -> stock.getProduct_id() == product.getId()).mapToInt(Stock::getId).findFirst().getAsInt();
-        productService.editProduct(product);
-        stockService.removeStock(car.getStockId(asInt));
-        carRepository.update(car);
+        if(productFound.isPresent()){
+            Product product = productFound.get();
+            List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
+            car.removeProduct(product);
+            stocks.stream().filter(stock -> stock.getProduct_id() == product.getId()).forEach(stock -> {
+                product.creditQuantity(stock.getQuantity());
+            });
+            int asInt = stocks.stream().filter(stock -> stock.getProduct_id() == product.getId()).mapToInt(Stock::getId).findFirst().getAsInt();
+            car.removeStock(asInt);
+            productService.editProduct(product);
+            stockService.removeStock(car.getStockId(asInt));
+            carRepository.update(car);
+        }
     }
 
     @Override
@@ -89,14 +109,14 @@ public class CarServiceImpl implements CarService {
         final int value = getInt("DIGITE O ID DO PRODUTO");
         Optional<Product> productFound = productService.getProduct(value);
         if(productFound.isEmpty()) {
-            System.out.println("Produto náo encontrado!");
+            printError("Produto náo encontrado!");
             return Optional.empty();
         }
         return productFound;
     }
 
     private int getInt(String message) {
-        System.out.println(message);
+        printMessage(message);
         int value = 0;
         try {
             value = this.scanner.nextInt();
@@ -104,6 +124,13 @@ public class CarServiceImpl implements CarService {
             e.getMessage();
         }
         return value;
+    }
+
+    private Car getCar() {
+        Car car;
+        Optional<Car> currentCar = carRepository.getCar();
+        car = currentCar.orElseGet(Car::new);
+        return car;
     }
 
 }

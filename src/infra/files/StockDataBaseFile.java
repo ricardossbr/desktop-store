@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class StockDataBaseFile {
@@ -56,9 +57,9 @@ public class StockDataBaseFile {
         return 1;
     }
 
-    public Stock getLineById(int id){
+    public Optional<Stock> getLineById(int id){
         try {
-            Stock stock = Files.lines(myObj.toPath())
+            Optional<Stock> stock = Files.lines(myObj.toPath())
                     .filter(line -> {
                         String[] split = line.split(SEPARATOR);
                         return split[0].equals(String.valueOf(id));
@@ -66,7 +67,7 @@ public class StockDataBaseFile {
                     .map(line -> {
                         String[] split = line.split(SEPARATOR);
                         return new Stock(split[0], split[1], split[2], split[3]);
-                    }).collect(Collectors.toList()).stream().findFirst().get();
+                    }).collect(Collectors.toList()).stream().findFirst();
             return stock;
         } catch (IOException e) {
             System.out.println("An error occurred.");

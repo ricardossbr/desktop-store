@@ -4,8 +4,8 @@ import src.domain.Stock;
 import src.infra.files.StockDataBaseFile;
 import src.infra.repository.StockRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class StockRepositoryImpl implements StockRepository {
@@ -18,9 +18,11 @@ public class StockRepositoryImpl implements StockRepository {
 
     @Override
     public List<Stock> getStocks(Set<Integer> stockIds) {
-        List <Stock> stocks = new ArrayList<>();
-        stockIds.stream().forEach( id -> stocks.add(dataBaseFile.getLineById(id)));
-        return stocks;
+        return stockIds.stream()
+                .map(dataBaseFile::getLineById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
     }
 
     @Override
@@ -35,9 +37,12 @@ public class StockRepositoryImpl implements StockRepository {
 
     @Override
     public void makeARealSale(int stockId) {
-        Stock stock = this.dataBaseFile.getLineById(stockId);
-        stock.makeSoldStatus();
-        this.dataBaseFile.editLineById(stock);
+        Optional<Stock> stock = this.dataBaseFile.getLineById(stockId);
+        if(stock.isPresent()){
+            Stock stockFound = stock.get();
+            stockFound.makeSoldStatus();
+            this.dataBaseFile.editLineById(stockFound);
+        }
     }
 
     @Override

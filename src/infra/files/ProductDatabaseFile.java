@@ -117,7 +117,6 @@ public class ProductDatabaseFile {
 
     public void editLineById(Product product){
         try {
-            final BufferedReader reader = this.openFile();
             List<String> out = Files.lines(myObj.toPath())
                     .map(line -> {
                         String[] split = line.split(SEPARATOR);
@@ -132,7 +131,6 @@ public class ProductDatabaseFile {
                     })
                     .collect(Collectors.toList());
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
-            this.closeFile(reader);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
