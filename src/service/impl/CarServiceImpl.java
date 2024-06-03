@@ -97,16 +97,16 @@ public class CarServiceImpl implements CarService {
     public void finishCar() {
         Car car = getCar();
         List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
-//        car.removeProduct(product);
-//        stocks.stream()
-//                .filter(stock -> stock.getProduct_id() == product.getId())
-//                .filter(stock -> stock.getStatus().equals(CAR.name()))
-//                .forEach(stock -> {
-//                    product.creditQuantity(stock.getQuantity());
-//                    car.removeStock(stock.getId());
-//                    stockService.removeStock(stock.getId());
-//                });
-//        productService.editProduct(product);
+        car.getProducts().forEach(product -> {
+            stocks.stream()
+                    .filter(stock -> stock.getProduct_id() == product.getId())
+                    .filter(stock -> stock.getStatus().equals(CAR.name()))
+                    .forEach(stock -> {
+                        product.creditQuantity(stock.getQuantity());
+                        stockService.removeStock(stock.getId());
+                    });
+            productService.editProduct(product);
+        });
         car.cleanCar();
         carRepository.update(car);
     }

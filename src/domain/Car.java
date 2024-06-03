@@ -5,6 +5,7 @@ import src.infra.repository.impl.CarRepositoryImp;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,10 @@ public class Car {
 
     public int getId() {
         return id;
+    }
+
+    public Set<Product> getProducts() {
+        return Collections.unmodifiableSet(this.products);
     }
 
     public void addProduct(Product product) {
