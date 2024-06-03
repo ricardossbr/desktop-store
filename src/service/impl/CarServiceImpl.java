@@ -2,7 +2,6 @@ package src.service.impl;
 
 import src.domain.Car;
 import src.domain.Product;
-import src.domain.Status;
 import src.domain.Stock;
 import src.infra.repository.CarRepository;
 import src.infra.repository.impl.CarRepositoryImp;
@@ -96,15 +95,29 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void finishCar() {
-
+        Car car = getCar();
+        List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
+//        car.removeProduct(product);
+//        stocks.stream()
+//                .filter(stock -> stock.getProduct_id() == product.getId())
+//                .filter(stock -> stock.getStatus().equals(CAR.name()))
+//                .forEach(stock -> {
+//                    product.creditQuantity(stock.getQuantity());
+//                    car.removeStock(stock.getId());
+//                    stockService.removeStock(stock.getId());
+//                });
+//        productService.editProduct(product);
+        car.cleanCar();
+        carRepository.update(car);
     }
 
     @Override
     public void finishAndMakeSale() {
-
-
-        stockService.makeSale();
-
+        Car car = getCar();
+        List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
+        stockService.makeSaleMultiStocks(stocks);
+        car.cleanCar();
+        carRepository.update(car);
     }
 
 

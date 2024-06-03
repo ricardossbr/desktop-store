@@ -21,12 +21,6 @@ public class Car {
         this.stockIds = new HashSet<>();
     }
 
-    public Car(int id, Set<Product> products, Set<Integer> stockIds){
-        this.id = id;
-        this.products = products;
-        this.stockIds = stockIds;
-    }
-
     public void setId(String id){
         this.id = Integer.parseInt(id);
     }
@@ -43,6 +37,11 @@ public class Car {
         this.products = this.products.stream().filter(r -> r.getId() != product.getId()).collect(Collectors.toSet());
     }
 
+    public void cleanCar() {
+        this.products = new HashSet<>();
+        this.stockIds = new HashSet<>();
+    }
+
     public void removeStock(int stockId) {
         this.stockIds.remove(stockId);
     }
@@ -53,10 +52,6 @@ public class Car {
 
     public Set<Integer> getIdentifyStock(){
         return Collections.unmodifiableSet(this.stockIds);
-    }
-
-    public int getStockId(int stockId){
-        return this.stockIds.contains(stockId) ? stockId : 0;
     }
 
     @Override

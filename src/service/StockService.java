@@ -10,7 +10,9 @@ public interface StockService {
 
     List<Stock> getStocks(Set<Integer> ids);
 
-    void makeSale();
+    void makeSaleMultiStocks();
+
+    void makeSaleMultiStocks(List<Stock> stock);
 
     int makeLikelySale(Product product, int quantity);
 

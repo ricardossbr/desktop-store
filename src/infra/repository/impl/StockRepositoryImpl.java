@@ -27,7 +27,7 @@ public class StockRepositoryImpl implements StockRepository {
 
     @Override
     public void makeSale(Stock stock) {
-        this.dataBaseFile.writerFile(stock.toString());
+        this.dataBaseFile.editLineById(stock);
     }
 
     @Override

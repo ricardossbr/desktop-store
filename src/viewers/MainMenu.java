@@ -51,7 +51,7 @@ public class MainMenu {
                 showMenu();
                 break;
             case "6":
-                stockService.makeSale();
+                stockService.makeSaleMultiStocks();
                 showMenu();
                 break;
             case "exit":

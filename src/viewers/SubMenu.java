@@ -27,12 +27,10 @@ public class SubMenu {
                 showMenu();
                 break;
             case "3":
-                service.finishCar();
-                showMenu();
+                service.finishAndMakeSale();
                 break;
             case "4":
-                service.finishAndMakeSale();
-                showMenu();
+                service.finishCar();
                 break;
             case "5":
                 break;
@@ -46,8 +44,8 @@ public class SubMenu {
         if(service.checkAlreadyCar()){
             printSubMenu("1 - Adicionar produto ao carrinho");
             printSubMenu("2 - Excluir produto");
-            printSubMenu("3 - Finalizar carrinho");
-            printSubMenu("4 - Finalizar carrinho e efetuar comprar");
+            printSubMenu("3 - Comprar todos os itens do carinho");
+            printSubMenu("4 - Finalizar carrinho");
             printSubMenu("5 - Sair");
         }else{
             service.createCar();

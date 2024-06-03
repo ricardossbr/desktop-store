@@ -33,7 +33,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public void makeSale() {
+    public void makeSaleMultiStocks() {
         final int id = getInt("----DIGITE O ID DO PRODUTO!-----");
         Optional<Product> product = productService.getProduct(id);
         if (product.isPresent()) {
@@ -51,6 +51,14 @@ public class StockServiceImpl implements StockService {
             System.err.println("Produto não encontrado!");
         }
 
+    }
+
+    @Override
+    public void makeSaleMultiStocks(List<Stock> stock) {
+        stock.forEach(stock1 -> {
+            stock1.makeSoldStatus();
+            repository.makeSale(stock1);
+        });
     }
 
     @Override
