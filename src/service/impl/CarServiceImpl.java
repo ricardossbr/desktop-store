@@ -2,6 +2,7 @@ package src.service.impl;
 
 import src.domain.Car;
 import src.domain.Product;
+import src.domain.Status;
 import src.domain.Stock;
 import src.infra.repository.CarRepository;
 import src.infra.repository.impl.CarRepositoryImp;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import static src.domain.Status.CAR;
 import static src.viewers.ConsoleColors.printError;
 import static src.viewers.ConsoleColors.printMessage;
 
@@ -34,59 +36,60 @@ public class CarServiceImpl implements CarService {
     public void createCar() {
         Car car = getCar();
         Optional<Product> productFound = getProduct();
-        if(productFound.isPresent()){
+        if (productFound.isPresent()) {
             Product product = productFound.get();
             final int quantity = getInt("DIGITE O QUANTIDADE DO PRODUTO");
             boolean debitIsOk = product.debitQuantity(quantity);
-            if(debitIsOk){
+            if (debitIsOk) {
                 productService.editProduct(product);
                 car.addProduct(product);
                 int stockId = stockService.makeLikelySale(product, quantity);
                 car.identifyStock(stockId);
                 carRepository.save(car);
-            }else {
+            } else {
                 createCar();
             }
-        }else{
+        } else {
             createCar();
         }
-
     }
 
     @Override
     public void addProduct() {
         Car car = getCar();
         Optional<Product> productFound = getProduct();
-        if(productFound.isPresent()){
+        if (productFound.isPresent()) {
             Product product = productFound.get();
             final int quantity = getInt("DIGITE O QUANTIDADE DO PRODUTO");
             boolean debitIsOk = product.debitQuantity(quantity);
-            if(debitIsOk){
+            if (debitIsOk) {
                 car.addProduct(product);
                 productService.editProduct(product);
-                stockService.makeLikelySale(product, quantity);
+                final int i = stockService.makeLikelySale(product, quantity);
+                car.identifyStock(i);
                 carRepository.save(car);
             }
         }
     }
 
 
-
     @Override
     public void removeProduct() {
         Car car = getCar();
         Optional<Product> productFound = getProduct();
-        if(productFound.isPresent()){
+        if (productFound.isPresent()) {
             Product product = productFound.get();
             List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
             car.removeProduct(product);
-            stocks.stream().filter(stock -> stock.getProduct_id() == product.getId()).forEach(stock -> {
-                product.creditQuantity(stock.getQuantity());
-            });
-            int asInt = stocks.stream().filter(stock -> stock.getProduct_id() == product.getId()).mapToInt(Stock::getId).findFirst().getAsInt();
-            car.removeStock(asInt);
+            stocks.stream()
+                    .filter(stock -> stock.getProduct_id() == product.getId())
+                    .filter(stock -> stock.getStatus().equals(CAR.name()))
+                    .forEach(stock -> {
+                        product.creditQuantity(stock.getQuantity());
+                        car.removeStock(stock.getId());
+                        stockService.removeStock(stock.getId());
+                    });
             productService.editProduct(product);
-            stockService.removeStock(car.getStockId(asInt));
             carRepository.update(car);
         }
     }
@@ -101,14 +104,14 @@ public class CarServiceImpl implements CarService {
 
 
         stockService.makeSale();
-        
+
     }
 
 
     private Optional<Product> getProduct() {
         final int value = getInt("DIGITE O ID DO PRODUTO");
         Optional<Product> productFound = productService.getProduct(value);
-        if(productFound.isEmpty()) {
+        if (productFound.isEmpty()) {
             printError("Produto náo encontrado!");
             return Optional.empty();
         }

@@ -16,7 +16,7 @@ public class CarRepositoryImp implements CarRepository {
 
     @Override
     public void save(Car car) {
-        this.file.writerFile(car.toString());
+        this.file.editLineById(car);
     }
 
     @Override

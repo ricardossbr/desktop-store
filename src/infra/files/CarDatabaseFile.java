@@ -30,15 +30,6 @@ public class CarDatabaseFile {
         }
     }
 
-    public void writerFile(String string){
-        try (PrintWriter myWriter = new PrintWriter(new FileOutputStream(this.myObj, true))){
-            myWriter.append(string).append("\n");
-        } catch (IOException e) {
-            printError("An error occurred. when try to write file");
-            e.printStackTrace();
-        }
-    }
-
     public Optional<Car> readFile(){
         try (final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))){
             if(reader.readLine() == null){
@@ -49,7 +40,6 @@ public class CarDatabaseFile {
             final Car car = new Car();
             while ((element=reader.readLine()) != null){
                 if(!element.trim().isEmpty()){
-
                     String line[] = new String[fields];
                     line = element.split(SEPARATOR);
                     if(line.length == 1 ){
@@ -99,6 +89,5 @@ public class CarDatabaseFile {
             e.printStackTrace();
         }
     }
-
 
 }

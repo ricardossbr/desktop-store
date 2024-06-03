@@ -28,10 +28,8 @@ public class StockDataBaseFile {
     }
 
     public void writerFile(String string){
-        try {
-            PrintWriter myWriter = new PrintWriter(new FileOutputStream(this.myObj, true));
-            myWriter.append(string).append("\n");
-            myWriter.close();
+        try(PrintWriter myWriter = new PrintWriter(new FileOutputStream(this.myObj, true))) {
+            myWriter.append("\n").append(string).append("\n");
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -39,22 +37,22 @@ public class StockDataBaseFile {
     }
 
     public int getNextId(){
-        try {
-            final BufferedReader reader = openFile();
+        try(final BufferedReader reader = openFile()) {
             String element = "";
             int nextId  = 0;
             while ((element=reader.readLine()) != null){
                 if(!element.trim().isEmpty()){
-                    nextId++;
+                    final String[] split = element.split(SEPARATOR);
+                    nextId = Integer.parseInt(split[0]);
                 }
             }
-            this.closeFile(reader);
-            return nextId == 0 ? 1 : nextId;
+            nextId++;
+            return nextId;
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-        return 1;
+        return 0;
     }
 
     public Optional<Stock> getLineById(int id){
@@ -78,15 +76,13 @@ public class StockDataBaseFile {
 
     public void deleteLineById(int id){
         try {
-            final BufferedReader reader = openFile();
-            List<String> out = Files.lines(myObj.toPath())
+            final List<String> out = Files.lines(myObj.toPath())
                     .filter(line -> {
-                        String[] split = line.split(SEPARATOR);
+                        final String[] split = line.split(SEPARATOR);
                         return !split[0].equals(String.valueOf(id));
                     })
                     .collect(Collectors.toList());
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
-            closeFile(reader);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

@@ -29,10 +29,8 @@ public class ProductDatabaseFile {
     }
 
     public void writerFile(String string){
-        try {
-            PrintWriter myWriter = new PrintWriter(new FileOutputStream(this.myObj, true));
-            myWriter.append(string).append("\n");
-            myWriter.close();
+        try(PrintWriter myWriter = new PrintWriter(new FileOutputStream(this.myObj, true))) {
+            myWriter.append("\n").append(string).append("\n");
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -41,8 +39,7 @@ public class ProductDatabaseFile {
 
     public List<Product> readFile(){
         final List<Product> products = new ArrayList<>();
-        try {
-            final BufferedReader reader = openFile();
+        try(final BufferedReader reader = openFile()) {
             String element = "";
             while ((element=reader.readLine()) != null){
                 if(!element.trim().isEmpty()){
@@ -51,7 +48,6 @@ public class ProductDatabaseFile {
                     products.add(product);
                 }
             }
-            closeFile(reader);
             return products;
         } catch (IOException e) {
             System.out.println("An error occurred.");
@@ -61,8 +57,7 @@ public class ProductDatabaseFile {
     }
 
     public int getNextId(){
-        try {
-            final BufferedReader reader = openFile();
+        try(final BufferedReader reader = openFile()) {
             String element = "";
             int nextId  = 0;
             while ((element=reader.readLine()) != null){
@@ -70,7 +65,6 @@ public class ProductDatabaseFile {
                     nextId++;
                 }
             }
-            closeFile(reader);
             return nextId;
         } catch (IOException e) {
             System.out.println("An error occurred.");
@@ -100,7 +94,6 @@ public class ProductDatabaseFile {
 
     public void deleteLineById(int id){
         try {
-            final BufferedReader reader = openFile();
             List<String> out = Files.lines(myObj.toPath())
                     .filter(line -> {
                         String[] split = line.split(SEPARATOR);
@@ -108,7 +101,6 @@ public class ProductDatabaseFile {
                     })
                     .collect(Collectors.toList());
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
-            closeFile(reader);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -135,10 +127,6 @@ public class ProductDatabaseFile {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-    }
-
-    private void closeFile(BufferedReader reader) throws IOException {
-        reader.close();
     }
 
     private BufferedReader openFile() throws FileNotFoundException {

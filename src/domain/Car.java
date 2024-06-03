@@ -44,7 +44,7 @@ public class Car {
     }
 
     public void removeStock(int stockId) {
-        this.stockIds = this.stockIds.stream().filter(r -> r.equals(stockId)).collect(Collectors.toSet());
+        this.stockIds.remove(stockId);
     }
 
     public void identifyStock(int stockId){
