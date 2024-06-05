@@ -1,8 +1,12 @@
 package src.domain;
 
-import src.infra.DatabaseFile;
+import src.infra.files.ProductDatabaseFile;
+import src.infra.repository.ProductRepository;
+import src.infra.repository.impl.ProductRepositoryImp;
 
 import java.math.BigDecimal;
+
+import static src.viewers.ConsoleColors.printError;
 
 public class Product {
         private final int id;
@@ -11,8 +15,8 @@ public class Product {
         protected int quantity;
 
         public Product(){
-                DatabaseFile file = new DatabaseFile();
-                this.id = file.getNextId();
+                ProductRepository repository = new ProductRepositoryImp();
+                this.id = repository.getNextId();
         }
         public Product(String id, String name, String value, String quantity){
                 this.id = Integer.parseInt(id);
@@ -22,7 +26,7 @@ public class Product {
         }
 
         public Product(String name, int value, int quantity){
-                DatabaseFile file = new DatabaseFile();
+                ProductDatabaseFile file = new ProductDatabaseFile();
                 this.id = file.getNextId();
                 this.name = name;
                 this.value = new BigDecimal(value);
@@ -43,6 +47,23 @@ public class Product {
 
         public int getQuantity(){return this.quantity;}
 
+        public boolean debitQuantity(int quantity){
+            if(this.quantity >= quantity){
+                this.quantity -= quantity;
+                return true;
+            }else {
+                printError("Saldo insuficiente!");
+                return false;
+            }
+        }
+
+        public void creditQuantity(int quantity){
+                if(quantity > 0){
+                  this.quantity += quantity;
+                }else{
+                   printError("Valor não pode ser negativo!");
+                }
+        }
 
         @Override
         public String toString() {

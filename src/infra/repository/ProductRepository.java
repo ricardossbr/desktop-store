@@ -1,14 +1,15 @@
-package src.infra;
+package src.infra.repository;
 
 import src.domain.Product;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface DataBase {
+public interface ProductRepository {
 
     List<Product> getProducts();
 
-    Product getById(int id);
+    Optional<Product> getById(int id);
 
     void saveProduct(Product product);
 
@@ -16,5 +17,5 @@ public interface DataBase {
 
     void deleteProduct(int id);
 
-
+    int getNextId();
 }

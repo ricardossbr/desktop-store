@@ -1,10 +1,10 @@
 package src;
 
-import src.service.Display;
+import src.viewers.MainMenu;
 
 public class Store {
     public static void main(String[] arg) {
-        Display display = new Display();
+        MainMenu display = new MainMenu();
         display.showMenu();
     }
 }
