@@ -44,13 +44,14 @@ public class ProductServiceImpl implements ProductService {
             final String name = getName();
             final int value = getInt("DIGITE O VALOR DO PRODUTO");
             final int quantity = getInt("DIGITE A QUANTIDADE DO PRODUTO");
-            product.prepareToEdit(name, value, quantity);
-            databaseImp.editProduct(product);
-            printMessage("Produto editado com sucesso!");
-        }else{
-            printError("id do produto não foi encontrado!");
+            if(checkUserConfirmed("Tem certeza que deseja editar o produto?")){
+                product.prepareToEdit(name, value, quantity);
+                databaseImp.editProduct(product);
+                printMessage("Produto editado com sucesso!");
+            }
+            return;
         }
-
+        printError("id do produto não foi encontrado!");
     }
 
     @Override
@@ -60,25 +61,27 @@ public class ProductServiceImpl implements ProductService {
             final Product newProduct = productFound.get();
             newProduct.prepareToEdit(product.getName(), product.getValue(), product.getQuantity());
             databaseImp.editProduct(newProduct);
-        }else{
-            printError("id do produto não foi encontrado!");
+            return;
         }
+        printError("id do produto não foi encontrado!");
     }
 
     @Override
     public void deleteProduct() {
-        printInfo("----DELETE PRODUCT-----");
-        final int id = scanner.nextInt();
+        final int id = getInt("----DIGITE O ID DO PRODUTO!-----");
         databaseImp.deleteProduct(id);
     }
 
     private int getInt(String message) {
         printInfo(message);
-        int value = 0;
-        try {
+        int value;
+        while (true){
             value = this.scanner.nextInt();
-        } catch (Exception e) {
-            e.getMessage();
+            if(value < 0){
+                continue;
+            }else{
+                break;
+            }
         }
         return value;
     }
@@ -88,12 +91,26 @@ public class ProductServiceImpl implements ProductService {
         String name = null;
         while (true){
             name = this.scanner.nextLine();
-            if(name == null || name.isEmpty()){
-                name = this.scanner.nextLine();
+            if(name.isEmpty()){
+                continue;
             }else{
                 break;
             }
         }
         return name;
+    }
+
+    private boolean checkUserConfirmed(String message) {
+        printInfo(message);
+        String confirmed = null;
+        while (true){
+            confirmed = this.scanner.nextLine();
+            if(confirmed == null || confirmed.isEmpty()){
+                continue;
+            }else{
+                break;
+            }
+        }
+        return confirmed.trim().equals("sim");
     }
 }

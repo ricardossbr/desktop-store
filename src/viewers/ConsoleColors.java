@@ -75,30 +75,30 @@ public class ConsoleColors {
 
 
     public static void printError(String message) {
-        System.out.println(RED_BOLD_BRIGHT + message);
+        System.out.println(RED_BOLD_BRIGHT + message.toUpperCase());
     }
 
     public static void printMenu(String message) {
-        System.out.println(CYAN_BOLD_BRIGHT + message);
+        System.out.println(CYAN_BOLD_BRIGHT + message.toUpperCase());
     }
 
     public static void disableMenu(String message) {
-        System.out.println(BLACK_BOLD_BRIGHT + message);
+        System.out.println(BLACK_BOLD_BRIGHT + message.toUpperCase());
     }
 
     public static void printSubMenu(String message) {
-        System.out.println(BLUE_BOLD_BRIGHT + message);
+        System.out.println(BLUE_BOLD_BRIGHT + message.toUpperCase());
     }
 
     public static void printMessage(String message) {
-        System.out.println(PURPLE_BOLD_BRIGHT + message);
+        System.out.println(PURPLE_BOLD_BRIGHT + message.toUpperCase());
     }
 
     public static void printWarning(String message) {
-        System.out.println(YELLOW_BOLD_BRIGHT + message);
+        System.out.println(YELLOW_BOLD_BRIGHT + message.toUpperCase());
     }
 
     public static void printInfo(String message) {
-        System.out.println(WHITE_BOLD_BRIGHT + message);
+        System.out.println(WHITE_BOLD_BRIGHT + message.toUpperCase());
     }
 }

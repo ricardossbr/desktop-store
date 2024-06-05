@@ -95,10 +95,14 @@ public class MainMenu {
             printError("----Não tem nenhum produto cadastrado ainda!-----");
             return;
         }
-        final int column1 = products.stream().map(r -> String.valueOf(r.getId()).length()).max(Integer::compareTo).get();
-        final int column2 = products.stream().map(r -> r.getName().length()).max(Integer::compareTo).get();
-        final int column3 = products.stream().map(r -> String.valueOf(r.getValue()).length()).max(Integer::compareTo).get();
-        final int column4 = products.stream().map(r -> String.valueOf(r.getQuantity()).length()).max(Integer::compareTo).get();
+        final String columnId = "ID";
+        final String columnName = "Nome";
+        final String columnPrice = "Valor";
+        final String columnQuantity = "Quantidade";
+        final int column1 = products.stream().map(r -> String.valueOf(r.getId()).length()).max(Integer::compareTo).stream().mapToInt(r -> r > columnId.length() ? r : columnId.length()).max().orElse(0);
+        final int column2 = products.stream().map(r -> r.getName().length()).max(Integer::compareTo).stream().mapToInt(r -> r > columnName.length() ? r : columnName.length()).max().orElse(0);
+        final int column3 = products.stream().map(r -> String.valueOf(r.getValue()).length()).max(Integer::compareTo).stream().mapToInt(r -> r > columnPrice.length() ? r : columnPrice.length()).max().orElse(0);
+        final int column4 = products.stream().map(r -> String.valueOf(r.getQuantity()).length()).max(Integer::compareTo).stream().mapToInt(r -> r > columnQuantity.length() ? r : columnQuantity.length()).max().orElse(0);
 
         final StringBuilder printColumn = new StringBuilder();
         printColumn.append(getStringPrint(column1));
@@ -106,6 +110,9 @@ public class MainMenu {
         printColumn.append(getStringPrint(column3));
         printColumn.append(getStringPrint(column4));
         printColumn.append("+");
+
+        printMessage(printColumn.toString());
+        printMessage( "|" + printField(columnId, column1 )+ "|" + printField(columnName, column2 ) + "|" + printField(columnPrice, column3 ) + "|" + printField(columnQuantity, column4) + "|");
 
         products.forEach(r -> {
             printMessage(printColumn.toString());
