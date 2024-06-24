@@ -37,7 +37,7 @@ public class StockDataBaseFile {
     }
 
     public int getNextId(){
-        try(final BufferedReader reader = openFile()) {
+        try(final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String element = "";
             int nextId  = 0;
             while ((element=reader.readLine()) != null){
@@ -90,8 +90,7 @@ public class StockDataBaseFile {
     }
 
     public void editLineById(Stock stock){
-        try {
-            final BufferedReader reader = this.openFile();
+        try{
             List<String> out = Files.lines(myObj.toPath())
                     .map(line -> {
                         String[] split = line.split(SEPARATOR);
@@ -106,20 +105,9 @@ public class StockDataBaseFile {
                     })
                     .collect(Collectors.toList());
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
-            this.closeFile(reader);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
     }
-
-    private void closeFile(BufferedReader reader) throws IOException {
-        reader.close();
-    }
-
-    private BufferedReader openFile() throws FileNotFoundException {
-        return new BufferedReader(new FileReader(FILE_NAME));
-    }
-
-
 }

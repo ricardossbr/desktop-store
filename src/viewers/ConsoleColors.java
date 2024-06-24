@@ -75,7 +75,7 @@ public class ConsoleColors {
 
 
     public static void printError(String message) {
-        System.out.println(RED_BOLD_BRIGHT + message.toUpperCase());
+        System.out.println("\n" + RED_BOLD_BRIGHT + message.toUpperCase());
     }
 
     public static void printMenu(String message) {

@@ -1,6 +1,6 @@
 package src.exception;
 
-public class ProductNotFoundException extends RuntimeException{
+public class ProductNotFoundException extends Exception {
 
     public ProductNotFoundException(){
         super("Product not found!");
