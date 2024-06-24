@@ -35,7 +35,6 @@ public class CarDatabaseFile {
             if(reader.readLine() == null){
                 return Optional.empty();
             }
-
             String element = "";
             final Car car = new Car();
             while ((element=reader.readLine()) != null){
@@ -81,7 +80,7 @@ public class CarDatabaseFile {
     }
 
     public void editLineById(Car car){
-        try (final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))){
+        try{
             List<String> out = Collections.singletonList(car.toString());
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {

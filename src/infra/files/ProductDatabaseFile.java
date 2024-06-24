@@ -39,7 +39,7 @@ public class ProductDatabaseFile {
 
     public List<Product> readFile(){
         final List<Product> products = new ArrayList<>();
-        try(final BufferedReader reader = openFile()) {
+        try(final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String element = "";
             while ((element=reader.readLine()) != null){
                 if(!element.trim().isEmpty()){
@@ -57,7 +57,7 @@ public class ProductDatabaseFile {
     }
 
     public int getNextId(){
-        try(final BufferedReader reader = openFile()) {
+        try(final BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String element = "";
             int nextId  = 0;
             while ((element=reader.readLine()) != null){
@@ -127,10 +127,6 @@ public class ProductDatabaseFile {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-    }
-
-    private BufferedReader openFile() throws FileNotFoundException {
-        return new BufferedReader(new FileReader(FILE_NAME));
     }
 
 }

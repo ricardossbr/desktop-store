@@ -1,16 +1,14 @@
 package src.service;
 
+import src.domain.Car;
+
+import java.util.Optional;
+
 public interface CarService {
 
-    boolean checkAlreadyCar();
+    Optional<Car> getACar();
 
-    void createCar();
+    void save(Car car);
 
-    void addProduct();
-
-    void removeProduct();
-
-    void finishCar();
-
-    void finishAndMakeSale();
+    void update(Car car);
 }

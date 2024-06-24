@@ -11,11 +11,9 @@ public interface ProductService {
 
     List<Product> getProducts();
 
-    void salveProduct();
-
-    void editProduct();
+    void salveProduct(Product product);
 
     void editProduct(Product product);
 
-    void deleteProduct();
+    void deleteProduct(int id);
 }
