@@ -25,15 +25,13 @@ public class SubMenu implements EventMenu {
             if(input == 5){
                 break;
             }
-
             if(!menu.containsKey(input)){
                 printError("Invalid menu option");
                 continue;
             }
-
+            final var eventMenu = menu.get(input);
+            eventMenu.execute();
             if(input == 3 || input == 4){
-                final var eventMenu = menu.get(input);
-                eventMenu.execute();
                 break;
             }
         }

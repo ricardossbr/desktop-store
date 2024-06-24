@@ -21,7 +21,6 @@ public class MakeSaleMultiStock implements EventMenu {
 
     @Override
     public void execute() {
-
         try {
             final int id = integerInput("----DIGITE O ID DO PRODUTO!-----");
             Optional<Product> product = productService.getProduct(id);

@@ -11,7 +11,6 @@ import src.service.impl.StockServiceImpl;
 import src.viewers.EventMenu;
 
 import java.util.List;
-import java.util.Optional;
 
 public class FinishAndMakeSaleFromCar implements EventMenu {
     private final CarService service = new CarServiceImpl();
