@@ -28,8 +28,8 @@ public class FinishCar implements EventMenu {
 
     @Override
     public void execute() {
-        Car car = carRepository.getACar().orElseGet(Car::new);
-        List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
+        final Car car = carRepository.getACar().orElseGet(Car::new);
+        final List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
         car.getProducts().forEach(product -> {
             stocks.stream()
                     .filter(stock -> stock.getProduct_id() == product.getId())

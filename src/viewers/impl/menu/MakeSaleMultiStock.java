@@ -25,9 +25,9 @@ public class MakeSaleMultiStock implements EventMenu {
             final int id = integerInput("----DIGITE O ID DO PRODUTO!-----");
             Optional<Product> product = productService.getProduct(id);
             if (product.isPresent()) {
-                Product foundProduct = product.get();
+                final Product foundProduct = product.get();
                 final int quantity = integerInput("----DIGITE A QUANTIDADE DE PRODUTOS PARA ESSA COMPRA-----");
-                Stock stock = new Stock(foundProduct.getId(), quantity, Status.SOLD);
+                final Stock stock = new Stock(foundProduct.getId(), quantity, Status.SOLD);
                 if(quantity > foundProduct.getQuantity()){
                     printError("Produto sem estoque para essa quantidade!");
                     return;

@@ -24,3 +24,8 @@ hs_err_pid*
 replay_pid*
 
 *.txt
+
+# Trash IDE's
+.idea
+*target
+*out

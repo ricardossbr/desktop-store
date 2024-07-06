@@ -4,7 +4,7 @@ import src.infra.repository.StockRepository;
 import src.infra.repository.impl.StockRepositoryImpl;
 
 public class Stock {
-    private int id;
+    private final int id;
     private int product_id;
     private int quantity;
     private Status status;

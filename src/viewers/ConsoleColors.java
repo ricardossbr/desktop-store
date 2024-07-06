@@ -101,4 +101,8 @@ public class ConsoleColors {
     public static void printInfo(String message) {
         System.out.println(WHITE_BOLD_BRIGHT + message.toUpperCase());
     }
+
+    public static void printProducts(String message) {
+        System.out.println(GREEN_BOLD_BRIGHT + message.toUpperCase());
+    }
 }

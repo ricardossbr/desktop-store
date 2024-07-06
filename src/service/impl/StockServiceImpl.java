@@ -40,7 +40,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public int makeLikelySale(Product product, int quantity) {
-        Stock stock = new Stock(product.getId(), quantity, Status.CAR);
+        final Stock stock = new Stock(product.getId(), quantity, Status.CAR);
         repository.makeLikelySale(stock);
         return stock.getId();
     }

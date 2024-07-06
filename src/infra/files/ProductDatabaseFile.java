@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static src.viewers.ConsoleColors.printError;
+import static src.viewers.ConsoleColors.printMessage;
+
 public class ProductDatabaseFile {
 
     private final File myObj;
@@ -21,7 +24,7 @@ public class ProductDatabaseFile {
         this.myObj = new File(FILE_NAME);
         try {
             if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
+                printMessage("File created: " + myObj.getName());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -32,8 +35,7 @@ public class ProductDatabaseFile {
         try(PrintWriter myWriter = new PrintWriter(new FileOutputStream(this.myObj, true))) {
             myWriter.append("\n").append(string).append("\n");
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
     }
 
@@ -50,10 +52,9 @@ public class ProductDatabaseFile {
             }
             return products;
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
-        return null;
+        return List.of();
     }
 
     public int getNextId(){
@@ -67,8 +68,7 @@ public class ProductDatabaseFile {
             }
             return nextId;
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
         return 1;
     }
@@ -86,10 +86,9 @@ public class ProductDatabaseFile {
                     }).toList().stream().findFirst();
 
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
-        return null;
+        return Optional.empty();
     }
 
     public void deleteLineById(int id){
@@ -102,8 +101,7 @@ public class ProductDatabaseFile {
                     .collect(Collectors.toList());
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
     }
 
@@ -124,8 +122,7 @@ public class ProductDatabaseFile {
                     .collect(Collectors.toList());
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
     }
 

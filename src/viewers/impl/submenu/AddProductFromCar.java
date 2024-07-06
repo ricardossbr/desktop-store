@@ -35,11 +35,11 @@ public class AddProductFromCar implements EventMenu {
                 if (debitIsOk) {
                     productService.editProduct(product);
                     car.addProduct(product);
-                    int stockId = stockService.makeLikelySale(product, quantity);
+                    final int stockId = stockService.makeLikelySale(product, quantity);
                     car.identifyStock(stockId);
                     service.save(car);
                 } else {
-                    execute();
+                    printError("Quantidade para compra e maior que o estoque.");
                 }
             }
         } catch (InvalidInputException e) {

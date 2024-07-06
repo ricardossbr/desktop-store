@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static src.viewers.ConsoleColors.printError;
+import static src.viewers.ConsoleColors.printMessage;
+
 public class StockDataBaseFile {
     private final File myObj;
     private final static String FILE_NAME = "stock_database.txt";
@@ -20,7 +23,7 @@ public class StockDataBaseFile {
         this.myObj = new File(FILE_NAME);
         try {
             if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
+                printMessage("File created: " + myObj.getName());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -31,8 +34,7 @@ public class StockDataBaseFile {
         try(PrintWriter myWriter = new PrintWriter(new FileOutputStream(this.myObj, true))) {
             myWriter.append("\n").append(string).append("\n");
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
     }
 
@@ -49,15 +51,14 @@ public class StockDataBaseFile {
             nextId++;
             return nextId;
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
         return 0;
     }
 
     public Optional<Stock> getLineById(int id){
         try {
-            Optional<Stock> stock = Files.lines(myObj.toPath())
+            return Files.lines(myObj.toPath())
                     .filter(line -> {
                         String[] split = line.split(SEPARATOR);
                         return split[0].equals(String.valueOf(id));
@@ -65,13 +66,11 @@ public class StockDataBaseFile {
                     .map(line -> {
                         String[] split = line.split(SEPARATOR);
                         return new Stock(split[0], split[1], split[2], split[3]);
-                    }).collect(Collectors.toList()).stream().findFirst();
-            return stock;
+                    }).toList().stream().findFirst();
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
-        return null;
+        return Optional.empty();
     }
 
     public void deleteLineById(int id){
@@ -84,8 +83,7 @@ public class StockDataBaseFile {
                     .collect(Collectors.toList());
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
     }
 
@@ -106,8 +104,7 @@ public class StockDataBaseFile {
                     .collect(Collectors.toList());
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            printError("An error occurred. when try to read file");
         }
     }
 }

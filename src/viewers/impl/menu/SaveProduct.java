@@ -31,7 +31,6 @@ public class SaveProduct implements EventMenu {
             if(e.getMessage().contains("Integer")){
                 printError("A quantidade valor inteiro!");
             }
-
             printError("Para o campo valor deve ser ponto flutuante");
         }
 

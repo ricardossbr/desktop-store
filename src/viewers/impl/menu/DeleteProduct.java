@@ -10,10 +10,9 @@ public class DeleteProduct implements EventMenu {
 
     @Override
     public void execute() {
-        final ProductRepositoryImp databaseImp = new ProductRepositoryImp();
-        final int id;
         try {
-            id = integerInput("----DIGITE O ID DO PRODUTO!-----");
+            final ProductRepositoryImp databaseImp = new ProductRepositoryImp();
+            final int id = integerInput("----DIGITE O ID DO PRODUTO!-----");
             databaseImp.deleteProduct(id);
         } catch (InvalidInputException e) {
             printError("O id do produto deve ser um numero inteiro!");

@@ -25,11 +25,6 @@ public class CarRepositoryImp implements CarRepository {
     }
 
     @Override
-    public void delete(int id) {
-        this.delete(id);
-    }
-
-    @Override
     public int getNextId() {
         return this.file.getNextId();
     }
