@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
         if(productFound.isEmpty()) {
             printError("id do produto não foi encontrado!");
         }
-        final Product newProduct = productFound.get();
+        final Product newProduct = productFound.orElseGet(Product::new);
         newProduct.prepareToEdit(product.getName(), product.getValue(), product.getQuantity());
         databaseImp.editProduct(newProduct);
     }

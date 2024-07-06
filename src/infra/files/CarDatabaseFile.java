@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static src.viewers.ConsoleColors.printError;
+import static src.viewers.ConsoleColors.printMessage;
 
 public class CarDatabaseFile {
 
@@ -23,7 +24,7 @@ public class CarDatabaseFile {
         this.myObj = new File(FILE_NAME);
         try {
             if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
+                printMessage("File created: " + myObj.getName());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -39,7 +40,7 @@ public class CarDatabaseFile {
             final Car car = new Car();
             while ((element=reader.readLine()) != null){
                 if(!element.trim().isEmpty()){
-                    String line[] = new String[fields];
+                    String[] line = new String[fields];
                     line = element.split(SEPARATOR);
                     if(line.length == 1 ){
                         if(line[0].contains("\t")){
@@ -57,7 +58,6 @@ public class CarDatabaseFile {
             return Optional.of(car);
         } catch (IOException e) {
             printError("An error occurred. when try to read file");
-            e.printStackTrace();
         }
         return Optional.empty();
     }
@@ -74,7 +74,6 @@ public class CarDatabaseFile {
             return nextId;
         } catch (IOException e) {
             printError("An error occurred. when try to get a new id on file");
-            e.printStackTrace();
         }
         return 1;
     }
@@ -85,7 +84,6 @@ public class CarDatabaseFile {
             Files.write(myObj.toPath(), out, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             printError("An error occurred. when try to read file");
-            e.printStackTrace();
         }
     }
 

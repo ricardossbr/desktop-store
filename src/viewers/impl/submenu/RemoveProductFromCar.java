@@ -26,11 +26,11 @@ public class RemoveProductFromCar implements EventMenu {
 
     @Override
     public void execute() {
-        Car car = service.getACar().orElseGet(Car::new);
-        Optional<Product> productFound = getProduct();
+        final Car car = service.getACar().orElseGet(Car::new);
+        final Optional<Product> productFound = getProduct();
         if (productFound.isPresent()) {
-            Product product = productFound.get();
-            List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
+            final Product product = productFound.get();
+            final List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
             car.removeProduct(product);
             stocks.stream()
                     .filter(stock -> stock.getProduct_id() == product.getId())
@@ -48,7 +48,7 @@ public class RemoveProductFromCar implements EventMenu {
     private Optional<Product> getProduct() {
         try {
             final int value = integerInput("DIGITE O ID DO PRODUTO");
-            Optional<Product> productFound = productService.getProduct(value);
+            final Optional<Product> productFound = productService.getProduct(value);
             if (productFound.isEmpty()) {
                 printError("Produto náo encontrado!");
                 return Optional.empty();

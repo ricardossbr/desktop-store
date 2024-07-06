@@ -20,8 +20,8 @@ public class FinishAndMakeSaleFromCar implements EventMenu {
 
     @Override
     public void execute() {
-        Car car = service.getACar().orElseGet(Car::new);
-        List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
+        final Car car = service.getACar().orElseGet(Car::new);
+        final List<Stock> stocks = stockService.getStocks(car.getIdentifyStock());
         stocks.forEach(stock1 -> {
             stock1.makeSoldStatus();
             stockRepository.makeSale(stock1);

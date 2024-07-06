@@ -12,7 +12,5 @@ public interface CarRepository {
 
     void update(Car car);
 
-    void delete(int id);
-
     int getNextId();
 }
