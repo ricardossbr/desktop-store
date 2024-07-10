@@ -3,12 +3,15 @@ package src.infra.files;
 import src.domain.Car;
 import src.domain.Product;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static src.viewers.ConsoleColors.printError;
 import static src.viewers.ConsoleColors.printMessage;

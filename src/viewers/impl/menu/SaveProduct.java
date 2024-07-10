@@ -9,7 +9,8 @@ import src.viewers.EventMenu;
 import java.math.BigDecimal;
 
 import static src.input.Input.*;
-import static src.viewers.ConsoleColors.*;
+import static src.viewers.ConsoleColors.printError;
+import static src.viewers.ConsoleColors.printMessage;
 
 public class SaveProduct implements EventMenu {
     private final ProductService service = new ProductServiceImpl();

@@ -2,7 +2,6 @@ package src.viewers.impl.menu;
 
 import src.domain.Product;
 import src.exception.InvalidInputException;
-import src.infra.repository.impl.ProductRepositoryImp;
 import src.service.ProductService;
 import src.service.impl.ProductServiceImpl;
 import src.viewers.EventMenu;

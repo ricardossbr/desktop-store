@@ -1,18 +1,13 @@
 package src.service.impl;
 
 import src.domain.Product;
-import src.exception.InvalidInputException;
 import src.infra.repository.impl.ProductRepositoryImp;
 import src.service.ProductService;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
-import static src.input.Input.bigDecimalInput;
-import static src.input.Input.integerInput;
-import static src.viewers.ConsoleColors.*;
+import static src.viewers.ConsoleColors.printError;
 
 public class ProductServiceImpl implements ProductService {
     private final ProductRepositoryImp databaseImp = new ProductRepositoryImp();
@@ -37,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
         final Optional<Product> productFound = databaseImp.getById(product.getId());
         if(productFound.isEmpty()) {
             printError("id do produto não foi encontrado!");
+            return;
         }
         final Product newProduct = productFound.orElseGet(Product::new);
         newProduct.prepareToEdit(product.getName(), product.getValue(), product.getQuantity());

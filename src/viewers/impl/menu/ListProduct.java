@@ -1,7 +1,6 @@
 package src.viewers.impl.menu;
 
 import src.domain.Product;
-import src.infra.repository.impl.ProductRepositoryImp;
 import src.service.ProductService;
 import src.service.impl.ProductServiceImpl;
 import src.viewers.EventMenu;
@@ -29,6 +28,7 @@ public class ListProduct implements EventMenu {
         final String columnName = "Nome";
         final String columnPrice = "Valor";
         final String columnQuantity = "Quantidade";
+
         final int column1 = products.stream().map(r -> String.valueOf(r.getId()).length()).max(Integer::compareTo).stream().mapToInt(r -> r > columnId.length() ? r : columnId.length()).max().orElse(0);
         final int column2 = products.stream().map(r -> r.getName().length()).max(Integer::compareTo).stream().mapToInt(r -> r > columnName.length() ? r : columnName.length()).max().orElse(0);
         final int column3 = products.stream().map(r -> String.valueOf(r.getValue()).length()).max(Integer::compareTo).stream().mapToInt(r -> r > columnPrice.length() ? r : columnPrice.length()).max().orElse(0);

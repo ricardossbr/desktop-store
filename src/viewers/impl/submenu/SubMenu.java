@@ -5,7 +5,8 @@ import src.viewers.EventMenu;
 import java.util.Map;
 import java.util.Scanner;
 
-import static src.viewers.ConsoleColors.*;
+import static src.viewers.ConsoleColors.printError;
+import static src.viewers.ConsoleColors.printSubMenu;
 
 public class SubMenu implements EventMenu {
 

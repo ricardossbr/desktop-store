@@ -1,13 +1,13 @@
 package src.viewers;
 
 import src.viewers.impl.menu.*;
-import src.viewers.impl.submenu.AddProductFromCar;
 import src.viewers.impl.submenu.SubMenu;
 
 import java.util.Map;
 import java.util.Scanner;
 
-import static src.viewers.ConsoleColors.*;
+import static src.viewers.ConsoleColors.printError;
+import static src.viewers.ConsoleColors.printMenu;
 
 public class MainMenu {
 
