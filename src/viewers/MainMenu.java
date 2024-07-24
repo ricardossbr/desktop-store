@@ -1,5 +1,6 @@
 package src.viewers;
 
+import src.server.HttpGet;
 import src.server.HttpServer;
 import src.viewers.impl.menu.*;
 import src.viewers.impl.submenu.SubMenu;
@@ -62,5 +63,6 @@ public class MainMenu {
         printMenu("-----------------------------------");
 
     }
+    HttpGet httpGet = new HttpGet(8080);
 
 }
