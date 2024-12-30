@@ -71,5 +71,14 @@ public class Product {
                 return id + "," + name + "," + value + "," + quantity + "\n";
         }
 
+        public String toJson(){
+                return " {\n" +
+                        "\t\"id\": " + id + ",\n" +
+                        "\t\"name\": \"" + name + "\",\n" +
+                        "\t\"value\": " + value + ",\n" +
+                        "\t\"quantity\": " + quantity + ",\n" +
+                        " }";
+        }
+
 
 }

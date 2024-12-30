@@ -12,7 +12,6 @@ import static src.viewers.ConsoleColors.printMenu;
 public class MainMenu {
 
     private final Scanner scanner = new Scanner(System.in);
-    final SubMenu subMenu = new SubMenu();
 
     private final Map<Integer, EventMenu> menu =
             Map.of(
