@@ -1,7 +1,7 @@
 package src;
 
-import src.server.HttpServer;
-import src.viewers.MainMenu;
+import src.application.server.HttpServer;
+import src.application.viewers.MainMenu;
 
 public class Store {
     public static void main(String[] arg) {

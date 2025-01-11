@@ -1,6 +1,6 @@
 package src.infra.files;
 
-import src.domain.Stock;
+import src.domain.model.Stock;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static src.viewers.ConsoleColors.printError;
-import static src.viewers.ConsoleColors.printMessage;
+import static src.application.input.ConsoleColors.printError;
+import static src.application.input.ConsoleColors.printMessage;
 
 public class StockDataBaseFile {
     private final File myObj;

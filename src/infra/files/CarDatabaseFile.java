@@ -1,7 +1,7 @@
 package src.infra.files;
 
-import src.domain.Car;
-import src.domain.Product;
+import src.domain.model.Car;
+import src.domain.model.Product;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static src.viewers.ConsoleColors.printError;
-import static src.viewers.ConsoleColors.printMessage;
+import static src.application.input.ConsoleColors.printError;
+import static src.application.input.ConsoleColors.printMessage;
 
 public class CarDatabaseFile {
 
